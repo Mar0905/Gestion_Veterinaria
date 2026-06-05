@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Mi Agenda</title>
+</head>
+
+<body>
+
+<h2>Mis Citas</h2>
+
+<table class="table">
+  <tr>
+    <th>Fecha</th>
+    <th>Mascota</th>
+    <th>Estado</th>
+    <th scope="col"> </th>
+  </tr>
+
+  <tbody>
+  <tr th:each="cita : ${citas}">
+    <td th:text="${cita.fechaCita}"></td>
+    <td th:text="${cita.mascota.nombre}"></td>
+    <td th:text="${cita.estado}"></td>
+    <td>
+      <form th:action="@{/historial/crear/{id}(id=${cita.id})}"
+            method="get">
+        <button type="submit" class="btn btn-success">
+          Atender
+        </button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

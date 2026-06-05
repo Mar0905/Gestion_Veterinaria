@@ -1,0 +1,61 @@
+<head>
+     <link rel="stylesheet" th:href="@{/css/menu-sidebar.css}">
+<script defer th:src="@{/js/menu-sidebar.js}"></script>
+</head>
+<nav xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="menu"
+     class="d-flex flex-column p-3 text-white">
+  <div class="logo-contenedor">
+    <img th:src="@{/img/logo.png}"
+          alt="Logo veterinaria"
+    >
+     <h5 class="text-white fw-bold">Veterinaria San Bernardo</h5>
+
+  </div>
+
+  <a class="nav-link d-flex align-items-center  me-3"
+     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+     th:href="@{/}"
+  >
+    <!-- logo -->
+    <i class="fi fi-sr-book-open-cover me-2"></i>
+    Inicio</a>
+
+  <a sec:authorize="hasRole('VETERINARIO')"
+     th:href="@{/veterinarios/agenda}" class="nav-link  d-flex align-items-center me-3">
+    Mi Agenda
+  </a>
+
+  <a class="nav-link d-flex align-items-center  me-3"
+     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+     th:href="@{/citas}"
+      >
+    <!-- logo -->
+    <i class="fi fi-sr-book-open-cover me-2"></i>
+    Agenda</a>
+
+  <a class="nav-link d-flex align-items-center  me-3"
+     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+     th:href="@{/citas/nueva}">
+    <!-- logo -->
+    <i class="fi fi-sr-plus me-2 "></i>
+    Nueva Cita</a>
+
+  <a class="nav-link  d-flex align-items-center me-3"
+     sec:authorize="hasRole('ADMIN')"
+     th:href="@{/admin}">
+
+    <!-- logo -->
+    <i class="fi fi-sr-user-gear me-2" ></i>
+    Administración
+  </a>
+  <hr>
+
+
+  <span class="mb-2  " sec:authorize="isAuthenticated()">
+        Usuario: <b sec:authentication="name"></b>
+    </span>
+
+  <a class="nav-link "  th:href="@{/logout}">Salir</a>
+</nav>

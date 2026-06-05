@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrar Cliente</title>
+<link rel="stylesheet" th:href="@{/css/cliente-form.css}">
+<script defer th:src="@{/js/cliente-form.js}"></script>
+    <title>Title</title>
+</head>
+<body>
+
+
+<h2> Registrar cliente</h2>
+<form th:action="@{/clientes/guardar}"
+      th:object="${cliente}"
+      method="post">
+
+  <label> Nombre </label>
+  <input type="text" th:field="*{nombre}" required>
+  <br><br>
+
+  <label> Dni</label>
+  <input maxlength="8" th:field="*{dni}">
+  <br><br>
+
+  <label> Apellidos </label>
+  <input type="text" th:field="*{apellido}">
+  <br><br>
+
+  <label> telefono</label>
+  <input type="text" maxlength="9" th:field="*{telefono}">
+  <br><br>
+
+  <label> email</label>
+  <input type="text" th:field="*{email}">
+  <br><br>
+
+
+  <label> dirección </label>
+  <input type="text" th:field="*{direccion}">
+
+  <button type="submit">Guardar</button>
+
+
+
+
+</form>
+<a th:href="@{/}"> atrás</a>
+
+
+</body>
+</html>

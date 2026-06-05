@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<table>
+    <tr>
+
+        <th> Nombre </th>
+        <th>Especialidad </th>
+        <th>telefono </th>
+        <th> CitasPendientes</th>
+        <th> Disponibilidad</th>
+
+    </tr>
+
+    <tr th:each = "c : ${veterinarios}">
+        <td th:text="${c.nombre}"></td>
+        <td  th:text="${c.especialidad}"></td>
+        <td  th:text="${c.telefono}"></td>
+        <td th:text="${veterinarioService.contarCitas(c.id)}"> </td>
+        <td th:text="${veterinarioService.disponibilidadHoy(c.id)}"></td>
+
+    </tr>
+
+    <a th:href="@{/}"> volver clientes </a>
+
+
+
+</table>
+</body>
+</html>

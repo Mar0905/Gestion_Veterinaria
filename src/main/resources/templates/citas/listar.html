@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda de Citas</title>
+<link rel="stylesheet" th:href="@{/css/agenda-citas.css}">
+<script defer th:src="@{/js/agenda-citas.js}"></script>
+    </head>
+<body>
+
+<h2>Agenda de Citas</h2>
+
+<table class="table ">
+    <tr>
+        <th scope="col">Fecha</th>
+        <th scope="col">Mascota</th>
+        <th scope="col">Veterinario</th>
+        <th scope="col">Estado</th>
+        <th scope="col"> </th>
+        <th scope="col"></th>
+    </tr>
+
+    <tbody>
+    <tr th:each="cita : ${citas}">
+        <td th:text="${cita.fechaCita}"></td>
+        <td th:text="${cita.mascota.nombre}"></td>
+        <td th:text="${cita.veterinario.nombre}"></td>
+        <td th:text="${cita.estado}"></td>
+        <td>
+            <form th:action="@{/citas/eliminar/{id}(id=${cita.id})}"
+                  method="post">
+                <button type="submit" class="btn btn-danger">
+                    Eliminar
+                </button>
+            </form>
+        </td>
+        <td>
+
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

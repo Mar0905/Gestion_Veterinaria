@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a th:href="@{/clientes/{id}/mascotas/nueva(id=${cliente.id})}">
+    crear nueva mascota
+</a>
+
+<table>
+    <tr>
+    <th> Nombre</th>
+    <th> especie</th>
+    <th> raza</th>
+    <th> sexo</th>
+    <th>años</th>
+    <th>peso</th>
+    </tr>
+
+    <tr th:each = "c : ${mascotas}">
+        <td th:text="${c.nombre}"></td>
+        <td th:text="${c.especie}"></td>
+        <td th:text="${c.raza}"></td>
+        <td th:text="${c.sexo}"></td>
+        <td th:text="${c.edad}"></td>
+        <td th:text="${c.peso}"></td>
+
+
+    </tr>
+</table>
+
+
+    <a th:href="@{/clientes}">
+        volver a clientes
+    </a>
+
+</body>
+</html>
