@@ -79,6 +79,19 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/veterinarios/{id}/editar")
+    public String editarVeterinario(@PathVariable Long id, Model model) {
+        model.addAttribute("veterinario", veterinarioService.buscarId(id));
+        return "admin/editar_veterinario";
+    }
+
+    @PostMapping("/veterinarios/{id}/actualizar")
+    public String actualizarVeterinario(@PathVariable Long id,
+                                         @ModelAttribute Veterinario veterinario) {
+        veterinarioService.actualizar(id, veterinario);
+        return "redirect:/admin";
+    }
+
 
 
 }

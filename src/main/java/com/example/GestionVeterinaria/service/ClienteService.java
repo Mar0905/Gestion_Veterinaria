@@ -41,6 +41,16 @@ public class ClienteService {
 
     }
 
+    public Cliente actualizar(Long id, Cliente datos) {
+        Cliente existente = devolverCliente_id(id);
+        existente.setNombre(datos.getNombre());
+        existente.setApellido(datos.getApellido());
+        existente.setTelefono(datos.getTelefono());
+        existente.setEmail(datos.getEmail());
+        existente.setDireccion(datos.getDireccion());
+        return clienteRepository.save(existente);
+    }
+
     //Eliminar cliente
     public void eliminar(Long id){
         Cliente cliente =devolverCliente_id(id);

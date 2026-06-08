@@ -48,6 +48,17 @@ public class MascotaService {
     }
 
 
+    public Mascota actualizar(Long id, Mascota datos) {
+        Mascota existente = buscarPorId(id);
+        existente.setNombre(datos.getNombre());
+        existente.setEspecie(datos.getEspecie());
+        existente.setRaza(datos.getRaza());
+        existente.setSexo(datos.getSexo());
+        existente.setEdad(datos.getEdad());
+        existente.setPeso(datos.getPeso());
+        return mascotaRepository.save(existente);
+    }
+
     //Eliminar por id
     public void eliminarMascota(Long id){
         Mascota mascota= buscarPorId(id);

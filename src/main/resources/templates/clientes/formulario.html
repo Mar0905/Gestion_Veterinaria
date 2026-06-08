@@ -1,53 +1,68 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registrar Cliente</title>
-<link rel="stylesheet" th:href="@{/css/cliente-form.css}">
-<script defer th:src="@{/js/cliente-form.js}"></script>
-    <title>Title</title>
-</head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Cliente</title></head>
 <body>
 
+<div class="container-fluid" style="max-width:640px">
 
-<h2> Registrar cliente</h2>
-<form th:action="@{/clientes/guardar}"
-      th:object="${cliente}"
-      method="post">
+  <h2 class="fw-bold mb-4"
+      th:text="${cliente.id != null} ? 'Editar Cliente' : 'Nuevo Cliente'">
+  </h2>
 
-  <label> Nombre </label>
-  <input type="text" th:field="*{nombre}" required>
-  <br><br>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-  <label> Dni</label>
-  <input maxlength="8" th:field="*{dni}">
-  <br><br>
+  <form th:action="${cliente.id == null} ? @{/clientes/guardar} : @{/clientes/{id}/actualizar(id=${cliente.id})}"
+        th:object="${cliente}"
+        method="post">
 
-  <label> Apellidos </label>
-  <input type="text" th:field="*{apellido}">
-  <br><br>
+    <div class="row g-3">
 
-  <label> telefono</label>
-  <input type="text" maxlength="9" th:field="*{telefono}">
-  <br><br>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Nombre</label>
+        <input type="text" class="form-control" th:field="*{nombre}" required maxlength="100">
+      </div>
 
-  <label> email</label>
-  <input type="text" th:field="*{email}">
-  <br><br>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Apellido</label>
+        <input type="text" class="form-control" th:field="*{apellido}" required maxlength="100">
+      </div>
 
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">DNI</label>
+        <input type="text" class="form-control" th:field="*{dni}"
+               maxlength="8" pattern="\d{8}"
+               th:readonly="${cliente.id != null}"
+               th:classappend="${cliente.id != null} ? 'bg-light' : ''"
+               required>
+        <div class="form-text" th:if="${cliente.id != null}">El DNI no se puede modificar.</div>
+      </div>
 
-  <label> dirección </label>
-  <input type="text" th:field="*{direccion}">
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Teléfono</label>
+        <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
+      </div>
 
-  <button type="submit">Guardar</button>
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Email</label>
+        <input type="email" class="form-control" th:field="*{email}" maxlength="100">
+      </div>
 
+      <div class="col-12">
+        <label class="form-label fw-semibold">Dirección</label>
+        <input type="text" class="form-control" th:field="*{direccion}" maxlength="200">
+      </div>
 
+    </div>
 
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-primary"
+              th:text="${cliente.id != null} ? 'Actualizar' : 'Guardar'">
+      </button>
+      <a th:href="@{/clientes}" class="btn btn-secondary">Cancelar</a>
+    </div>
 
-</form>
-<a th:href="@{/}"> atrás</a>
-
+  </form>
+</div>
 
 </body>
 </html>

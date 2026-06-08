@@ -26,10 +26,13 @@
 <table>
   <tr th:each="v : ${veterinarios}">
     <td th:text="${v.nombre}"></td>
+    <td th:text="${v.especialidad}"></td>
     <td>
-      <a th:href="@{/admin/eliminarVeterinario/{id}(id=${v.id})}">
-        Eliminar
-      </a>
+      <a th:href="@{/admin/veterinarios/{id}/editar(id=${v.id})}"
+         class="btn btn-sm btn-outline-primary me-1">Editar</a>
+      <a th:href="@{/admin/eliminarVeterinario/{id}(id=${v.id})}"
+         class="btn btn-sm btn-outline-danger"
+         onclick="return confirm('¿Eliminar este veterinario?')">Eliminar</a>
     </td>
   </tr>
 </table>

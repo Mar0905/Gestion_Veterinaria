@@ -46,6 +46,14 @@ public class VeterinarioService {
         return veterinarioRepository.save(veterinario);
     }
 
+    public Veterinario actualizar(Long id, Veterinario datos) {
+        Veterinario existente = buscarId(id);
+        existente.setNombre(datos.getNombre());
+        existente.setEspecialidad(datos.getEspecialidad());
+        existente.setTelefono(datos.getTelefono());
+        return veterinarioRepository.save(existente);
+    }
+
     public void eliminarVeterinario(Veterinario id_veterinario){
         veterinarioRepository.delete(id_veterinario);
     }
