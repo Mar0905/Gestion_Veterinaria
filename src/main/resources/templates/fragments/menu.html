@@ -45,10 +45,15 @@
   <a class="nav-link  d-flex align-items-center me-3"
      sec:authorize="hasRole('ADMIN')"
      th:href="@{/admin}">
-
-    <!-- logo -->
     <i class="fi fi-sr-user-gear me-2" ></i>
     Administración
+  </a>
+
+  <a class="nav-link d-flex align-items-center me-3"
+     sec:authorize="hasRole('ADMIN')"
+     th:href="@{/inventario}">
+    <i class="fi fi-sr-box me-2"></i>
+    Inventario
   </a>
   <hr>
 

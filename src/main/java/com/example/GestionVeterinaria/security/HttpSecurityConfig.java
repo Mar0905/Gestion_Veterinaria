@@ -35,7 +35,7 @@ public class HttpSecurityConfig {
                             .permitAll();
 
                     // ADMIN
-                    auth.requestMatchers("/admin/**")
+                    auth.requestMatchers("/admin/**", "/inventario/**")
                             .hasRole("ADMIN");
 
                     // VETERINARIO
