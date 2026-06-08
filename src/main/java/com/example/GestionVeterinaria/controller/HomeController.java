@@ -39,6 +39,11 @@ public class HomeController {
         this.comprobanteRepository = comprobanteRepository;
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/")
     public String home(Model model) {
         LocalDate hoy = LocalDate.now();
