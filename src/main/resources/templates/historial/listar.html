@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Historial Clínico</title></head>
+<body>
+
+<div class="container-fluid">
+
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Historial Clínico</h2>
+      <p class="page-subtitle">Registros médicos de todas las mascotas</p>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="card mb-3">
+    <div class="card-body" style="padding:12px 16px !important">
+      <div class="search-wrapper">
+        <i class="fi fi-sr-search search-icon"></i>
+        <input type="text" class="form-control"
+               placeholder="Buscar por mascota, diagnóstico o tratamiento..."
+               oninput="filterCards(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div th:if="${#lists.isEmpty(historiales)}" class="card">
+    <div class="card-body text-center py-5">
+      <i class="fi fi-sr-clipboard-list fs-2 d-block mb-2 text-muted opacity-50"></i>
+      <p class="text-muted">No hay registros en el historial clínico.</p>
+    </div>
+  </div>
+
+  <!-- Historial cards -->
+  <div id="historialCards" th:if="${!#lists.isEmpty(historiales)}">
+    <div th:each="h : ${historiales}" class="card mb-3 historial-card">
+      <div class="card-body">
+
+        <!-- Header: mascota + fecha + veterinario -->
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                 style="width:48px;height:48px;background:#dbeafe">
+              <i class="fi fi-sr-paw" style="color:#2563eb;font-size:20px"></i>
+            </div>
+            <div>
+              <h6 class="mb-0 fw-semibold" th:text="${h.mascota.nombre}"></h6>
+              <small class="text-muted" th:text="${h.fechaConsulta}"></small>
+            </div>
+          </div>
+          <small class="text-muted">
+            <i class="fi fi-sr-user-md me-1"></i>
+            <span th:text="${h.cita != null ? h.cita.veterinario.nombre : '—'}"></span>
+          </small>
+        </div>
+
+        <!-- Diagnóstico / Tratamiento / Observaciones -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="background:#fef2f2;border:1px solid #fecaca">
+              <p class="small fw-semibold mb-1" style="color:#991b1b">Diagnóstico</p>
+              <p class="small mb-0" style="color:#7f1d1d" th:text="${h.diagnostico}"></p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="background:#eff6ff;border:1px solid #bfdbfe">
+              <p class="small fw-semibold mb-1" style="color:#1e40af">Tratamiento</p>
+              <p class="small mb-0" style="color:#1e3a8a" th:text="${h.tratamiento}"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div th:if="${h.observaciones != null and !#strings.isEmpty(h.observaciones)}"
+             class="mt-2 p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
+          <p class="small fw-semibold mb-1 text-muted">Observaciones</p>
+          <p class="small mb-0 text-muted" th:text="${h.observaciones}"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function filterCards(input) {
+  var filter = input.value.toLowerCase();
+  document.querySelectorAll('.historial-card').forEach(function(card) {
+    card.style.display = card.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>

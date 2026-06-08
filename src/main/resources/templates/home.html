@@ -2,184 +2,167 @@
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head><meta charset="UTF-8"><title>Inicio</title></head>
+<head><meta charset="UTF-8"><title>Dashboard</title></head>
 <body>
 
 <div class="container-fluid">
 
-  <h2 class="fw-bold mb-1">Bienvenido/a,
-    <span sec:authentication="name"></span>
-  </h2>
-  <p class="text-muted mb-4">Veterinaria San Bernardo — Panel principal</p>
-
-  <!-- Acciones rápidas ADMIN -->
-  <div sec:authorize="hasRole('ADMIN')">
-    <h5 class="fw-semibold text-secondary mb-3">Acceso rápido</h5>
-    <div class="row g-3 mb-2">
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/clientes}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-primary bg-opacity-10 p-3">
-              <i class="fi fi-sr-users fs-4 text-primary"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Clientes</p>
-              <p class="text-muted small mb-0">Gestionar clientes</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/citas}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-warning bg-opacity-10 p-3">
-              <i class="fi fi-sr-calendar fs-4 text-warning"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Citas</p>
-              <p class="text-muted small mb-0">Agenda de citas</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/inventario}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-info bg-opacity-10 p-3">
-              <i class="fi fi-sr-box fs-4 text-info"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Inventario</p>
-              <p class="text-muted small mb-0">Productos y stock</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/facturacion}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-success bg-opacity-10 p-3">
-              <i class="fi fi-sr-receipt fs-4 text-success"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Facturación</p>
-              <p class="text-muted small mb-0">Boletas y facturas</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/reportes}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-secondary bg-opacity-10 p-3">
-              <i class="fi fi-sr-chart-histogram fs-4 text-secondary"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Reportes</p>
-              <p class="text-muted small mb-0">Estadísticas y gráficos</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <a th:href="@{/admin}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-danger bg-opacity-10 p-3">
-              <i class="fi fi-sr-user-gear fs-4 text-danger"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Administración</p>
-              <p class="text-muted small mb-0">Usuarios y veterinarios</p>
-            </div>
-          </div>
-        </a>
-      </div>
-
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <h2 class="page-title">PANEL PRINCIPAL</h2>
+      <p class="page-subtitle">Resumen del día</p>
     </div>
   </div>
 
-  <!-- Acciones rápidas RECEPCION -->
-  <div sec:authorize="hasRole('RECEPCION')">
-    <h5 class="fw-semibold text-secondary mb-3">Acceso rápido</h5>
-    <div class="row g-3">
-
-      <div class="col-sm-6 col-md-4">
-        <a th:href="@{/clientes}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-primary bg-opacity-10 p-3">
-              <i class="fi fi-sr-users fs-4 text-primary"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Clientes</p>
-              <p class="text-muted small mb-0">Gestionar clientes</p>
-            </div>
-          </div>
-        </a>
+  <!-- ── KPI Cards ────────────────────────────────────────────── -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+      <div class="kpi-card kpi-blue">
+        <span class="kpi-value" th:text="${citasHoy}">0</span>
+        <span class="kpi-label">Citas hoy</span>
       </div>
-
-      <div class="col-sm-6 col-md-4">
-        <a th:href="@{/citas/nueva}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-warning bg-opacity-10 p-3">
-              <i class="fi fi-sr-plus fs-4 text-warning"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Nueva Cita</p>
-              <p class="text-muted small mb-0">Registrar cita rápida</p>
-            </div>
-          </div>
-        </a>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="kpi-card kpi-orange">
+        <span class="kpi-value" th:text="${atendidosHoy}">0</span>
+        <span class="kpi-label">Atendidos</span>
       </div>
-
-      <div class="col-sm-6 col-md-4">
-        <a th:href="@{/facturacion/nuevo}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-success bg-opacity-10 p-3">
-              <i class="fi fi-sr-receipt fs-4 text-success"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Nuevo Comprobante</p>
-              <p class="text-muted small mb-0">Emitir boleta/factura</p>
-            </div>
-          </div>
-        </a>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="kpi-card kpi-green">
+        <span class="kpi-value" th:text="${totalClientes}">0</span>
+        <span class="kpi-label">Nuevos pacientes</span>
       </div>
-
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="kpi-card kpi-purple">
+        <span class="kpi-value"
+              th:text="'S/. ' + ${#numbers.formatDecimal(ingresosHoy, 1, 0)}">S/. 0</span>
+        <span class="kpi-label">Ingresos hoy</span>
+      </div>
     </div>
   </div>
 
-  <!-- Veterinario -->
-  <div sec:authorize="hasRole('VETERINARIO')">
-    <h5 class="fw-semibold text-secondary mb-3">Mi panel</h5>
-    <div class="row g-3">
-      <div class="col-sm-6 col-md-4">
-        <a th:href="@{/veterinarios/agenda}" class="card text-decoration-none shadow-sm h-100 border-0 card-accion">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-primary bg-opacity-10 p-3">
-              <i class="fi fi-sr-calendar fs-4 text-primary"></i>
-            </div>
-            <div>
-              <p class="fw-semibold mb-0 text-dark">Mi Agenda</p>
-              <p class="text-muted small mb-0">Ver citas programadas</p>
-            </div>
+  <!-- ── Próximas citas + Alertas ─────────────────────────────── -->
+  <div class="row g-3 mb-3">
+
+    <!-- Próximas citas -->
+    <div class="col-lg-7">
+      <div class="card h-100">
+        <div class="card-header card-header-blue">Próximas citas</div>
+        <div class="card-body p-0">
+          <div th:if="${#lists.isEmpty(proximasCitas)}"
+               class="text-center text-muted py-5">
+            <i class="fi fi-sr-calendar fs-2 d-block mb-2 opacity-50"></i>
+            No hay citas programadas próximamente.
           </div>
-        </a>
+          <table class="table table-hover mb-0" th:if="${!#lists.isEmpty(proximasCitas)}">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Mascota</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th class="text-center" sec:authorize="hasAnyRole('ADMIN','RECEPCION')">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="cita : ${proximasCitas}">
+                <td>
+                  <span class="fw-medium" th:text="${cita.horaCita}"></span>
+                  <small class="d-block text-muted" th:text="${cita.fechaCita}"></small>
+                </td>
+                <td class="fw-medium" th:text="${cita.mascota.nombre}"></td>
+                <td class="text-muted" th:text="${cita.motivo ?: '—'}"></td>
+                <td>
+                  <span class="badge badge-programada"
+                        th:text="${cita.estado}">
+                  </span>
+                </td>
+                <td class="text-center" sec:authorize="hasAnyRole('ADMIN','RECEPCION')">
+                  <form th:action="@{/citas/eliminar/{id}(id=${cita.id})}"
+                        method="post" class="d-inline"
+                        onsubmit="return confirm('¿Eliminar cita?')">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                      <i class="fi fi-sr-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer bg-white border-top" style="padding:10px 16px">
+          <a th:href="@{/citas}" class="text-decoration-none small"
+             sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+             style="color:#0ea5e9">
+            Ver todas las citas →
+          </a>
+        </div>
       </div>
     </div>
+
+    <!-- Alertas del sistema -->
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-header card-header-orange">Alertas del sistema</div>
+        <div class="card-body p-4" style="display:flex;flex-direction:column;gap:10px">
+
+          <!-- Sin alertas -->
+          <div th:if="${!hayAlertas}"
+               class="text-center text-muted py-4">
+            <i class="fi fi-sr-check-circle fs-2 d-block mb-2" style="color:#10b981;opacity:.7"></i>
+            <span class="small">Todo está en orden. Sin alertas.</span>
+          </div>
+
+          <!-- Stock bajo -->
+          <div th:each="p : ${alertasStock}"
+               class="d-flex align-items-start gap-2 p-3 rounded"
+               style="background:#fff7ed;border:1px solid #fed7aa">
+            <i class="fi fi-sr-triangle-warning mt-1 flex-shrink-0" style="color:#ea580c"></i>
+            <p class="mb-0 small" style="color:#7c2d12">
+              <strong>Stock bajo:</strong>
+              <span th:text="${p.nombre}"></span>
+              (<span th:text="${p.stock}"></span> unidades)
+            </p>
+          </div>
+
+          <!-- Próximos a vencer -->
+          <div th:each="p : ${alertasVencimiento}"
+               class="d-flex align-items-start gap-2 p-3 rounded"
+               style="background:#ecfdf5;border:1px solid #a7f3d0">
+            <i class="fi fi-sr-calendar mt-1 flex-shrink-0" style="color:#059669"></i>
+            <p class="mb-0 small" style="color:#064e3b">
+              <strong>Vencimiento próximo:</strong>
+              <span th:text="${p.nombre}"></span>
+              (<span th:text="${p.fechaVencimiento}"></span>)
+            </p>
+          </div>
+
+          <!-- Alerta informativa fija -->
+          <div class="d-flex align-items-start gap-2 p-3 rounded"
+               style="background:#eff6ff;border:1px solid #bfdbfe">
+            <i class="fi fi-sr-info mt-1 flex-shrink-0" style="color:#2563eb"></i>
+            <p class="mb-0 small" style="color:#1e3a8a">
+              Revisa el inventario regularmente para evitar desabastecimiento.
+            </p>
+          </div>
+
+        </div>
+        <div class="card-footer bg-white border-top" style="padding:10px 16px"
+             sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{/inventario}" class="text-decoration-none small"
+             style="color:#f97316">
+            Ver inventario →
+          </a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
-
-<style>
-  .card-accion { transition: transform .15s, box-shadow .15s; cursor: pointer; }
-  .card-accion:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.12) !important; }
-</style>
 
 </body>
 </html>

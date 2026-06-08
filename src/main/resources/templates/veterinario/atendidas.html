@@ -5,12 +5,24 @@
 
 <div class="container-fluid">
 
-  <h2 class="fw-bold mb-4">Citas Atendidas</h2>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Veterinario</p>
+      <h2 class="page-title">Citas Atendidas</h2>
+      <p class="page-subtitle">Historial de consultas realizadas</p>
+    </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/veterinarios/agenda}" class="btn btn-primary btn-sm">
+        <i class="fi fi-sr-calendar-check"></i> Mi Agenda
+      </a>
+    </div>
+  </div>
 
-  <div class="card shadow-sm">
+  <div class="card">
     <div class="card-body p-0">
       <table class="table table-hover mb-0">
-        <thead class="table-dark">
+        <thead>
           <tr>
             <th>Fecha</th>
             <th>Mascota</th>
@@ -21,13 +33,11 @@
         </thead>
         <tbody>
           <tr th:if="${#lists.isEmpty(citas)}">
-            <td colspan="5" class="text-center text-muted py-4">
-              No hay citas atendidas aún.
-            </td>
+            <td colspan="5" class="text-center text-muted py-4">No hay citas atendidas aún.</td>
           </tr>
           <tr th:each="cita : ${citas}">
             <td th:text="${cita.fechaCita}"></td>
-            <td th:text="${cita.mascota.nombre}"></td>
+            <td class="fw-medium" th:text="${cita.mascota.nombre}"></td>
             <td>
               <span class="badge bg-secondary" th:text="${cita.mascota.especie}"></span>
             </td>

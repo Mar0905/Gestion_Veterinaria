@@ -3,33 +3,49 @@
 <head><meta charset="UTF-8"><title>Veterinario</title></head>
 <body>
 
-<div class="container-fluid" style="max-width:500px">
+<div class="container-fluid">
 
-  <h2 class="fw-bold mb-4">Registrar Veterinario</h2>
-
-  <form th:action="@{/veterinarios/guardar}" th:object="${veterinario}" method="post">
-
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Nombre</label>
-      <input type="text" class="form-control" th:field="*{nombre}" required>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Veterinarios</p>
+      <h2 class="page-title">Registrar Veterinario</h2>
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Especialidad</label>
-      <input type="text" class="form-control" th:field="*{especialidad}" required>
+  <div class="card" style="max-width:500px">
+    <div class="card-header">Datos del veterinario</div>
+    <div class="card-body">
+
+      <form th:action="@{/veterinarios/guardar}" th:object="${veterinario}" method="post">
+
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-control" th:field="*{nombre}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Especialidad</label>
+          <input type="text" class="form-control" th:field="*{especialidad}" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Teléfono</label>
+          <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="fi fi-sr-check"></i> Guardar
+          </button>
+          <a th:href="@{/veterinarios}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 
-    <div class="mb-4">
-      <label class="form-label fw-semibold">Teléfono</label>
-      <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
-    </div>
-
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary">Guardar</button>
-      <a th:href="@{/veterinarios}" class="btn btn-secondary">Cancelar</a>
-    </div>
-
-  </form>
 </div>
 
 </body>

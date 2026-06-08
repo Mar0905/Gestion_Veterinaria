@@ -3,68 +3,81 @@
 <head><meta charset="UTF-8"><title>Mascota</title></head>
 <body>
 
-<div class="container-fluid" style="max-width:560px">
+<div class="container-fluid">
 
-  <h2 class="fw-bold mb-4"
-      th:text="${mascota.id != null} ? 'Editar Mascota' : 'Nueva Mascota'">
-  </h2>
-
-  <form th:action="${mascota.id == null}
-          ? @{/clientes/{cid}/mascotas/guardar(cid=${clienteId})}
-          : @{/clientes/{cid}/mascotas/{mid}/actualizar(cid=${clienteId}, mid=${mascota.id})}"
-        th:object="${mascota}"
-        method="post">
-
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Nombre</label>
-      <input type="text" class="form-control" th:field="*{nombre}" required maxlength="100">
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Mascotas</p>
+      <h2 class="page-title"
+          th:text="${mascota.id != null} ? 'Editar Mascota' : 'Nueva Mascota'"></h2>
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Especie</label>
-      <select class="form-select" th:field="*{especie}" required>
-        <option value="">-- Seleccionar --</option>
-        <option value="Perro">Perro</option>
-        <option value="Gato">Gato</option>
-        <option value="Ave">Ave</option>
-        <option value="Conejo">Conejo</option>
-        <option value="Otro">Otro</option>
-      </select>
+  <div class="card" style="max-width:560px">
+    <div class="card-header card-header-orange">Datos de la mascota</div>
+    <div class="card-body">
+
+      <form th:action="${mascota.id == null}
+              ? @{/clientes/{cid}/mascotas/guardar(cid=${clienteId})}
+              : @{/clientes/{cid}/mascotas/{mid}/actualizar(cid=${clienteId}, mid=${mascota.id})}"
+            th:object="${mascota}"
+            method="post">
+
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-control" th:field="*{nombre}" required maxlength="100">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Especie</label>
+          <select class="form-select" th:field="*{especie}" required>
+            <option value="">— Seleccionar —</option>
+            <option value="Perro">Perro</option>
+            <option value="Gato">Gato</option>
+            <option value="Ave">Ave</option>
+            <option value="Conejo">Conejo</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Raza</label>
+          <input type="text" class="form-control" th:field="*{raza}" maxlength="50">
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label class="form-label">Sexo</label>
+            <select class="form-select" th:field="*{sexo}">
+              <option value="macho">Macho</option>
+              <option value="hembra">Hembra</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Edad (años)</label>
+            <input type="number" class="form-control" th:field="*{edad}" min="0" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Peso (kg)</label>
+            <input type="number" class="form-control" th:field="*{peso}" step="0.1" min="0" required>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary"
+                  th:text="${mascota.id != null} ? 'Actualizar' : 'Guardar'">
+          </button>
+          <a th:href="@{/clientes/{id}/mascotas(id=${clienteId})}" class="btn btn-outline-secondary">
+            Cancelar
+          </a>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Raza</label>
-      <input type="text" class="form-control" th:field="*{raza}" maxlength="50">
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Sexo</label>
-        <select class="form-select" th:field="*{sexo}">
-          <option value="macho">Macho</option>
-          <option value="hembra">Hembra</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Edad (años)</label>
-        <input type="number" class="form-control" th:field="*{edad}" min="0" required>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Peso (kg)</label>
-        <input type="number" class="form-control" th:field="*{peso}" step="0.1" min="0" required>
-      </div>
-    </div>
-
-    <div class="d-flex gap-2 mt-4">
-      <button type="submit" class="btn btn-primary"
-              th:text="${mascota.id != null} ? 'Actualizar' : 'Guardar'">
-      </button>
-      <a th:href="@{/clientes/{id}/mascotas(id=${clienteId})}" class="btn btn-secondary">
-        Cancelar
-      </a>
-    </div>
-
-  </form>
 </div>
 
 </body>

@@ -5,155 +5,242 @@
 
 <div class="container-fluid">
 
-  <h2 class="fw-bold mb-4">Nuevo Comprobante</h2>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Facturación</p>
+      <h2 class="page-title">Nuevo Comprobante</h2>
+      <p class="page-subtitle">Emite una boleta o factura con IGV incluido</p>
+    </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/facturacion}" class="btn btn-outline-secondary btn-sm">
+        <i class="fi fi-sr-arrow-left"></i> Volver
+      </a>
+    </div>
+  </div>
 
   <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
 
-  <form th:action="@{/facturacion/guardar}" method="post" id="formComprobante">
-
-    <!-- Cabecera -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Cliente</label>
-        <select name="clienteId" class="form-select" required>
-          <option value="">-- Seleccionar --</option>
-          <option th:each="c : ${clientes}"
-                  th:value="${c.id}"
-                  th:text="${c.nombre + ' ' + c.apellido + ' (' + c.dni + ')'}">
-          </option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Tipo de comprobante</label>
-        <select name="tipo" class="form-select" required>
-          <option value="BOLETA">Boleta</option>
-          <option value="FACTURA">Factura</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Método de pago</label>
-        <select name="metodoPago" class="form-select" required>
-          <option value="efectivo">Efectivo</option>
-          <option value="tarjeta">Tarjeta</option>
-          <option value="yape">Yape</option>
-          <option value="plin">Plin</option>
-        </select>
+  <!-- ── Main form card ───────────────────────────────────────── -->
+  <div class="card"
+       style="background:linear-gradient(135deg,rgba(239,246,255,0.6),white,rgba(245,243,255,0.6)) !important;
+              max-width:960px">
+    <div class="card-header"
+         style="background:linear-gradient(to right,#eff6ff,#faf5ff) !important;
+                border-bottom:1px solid #ddd6fe !important;color:#3730a3 !important">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fi fi-sr-receipt"></i>
+        <span>Datos del comprobante</span>
       </div>
     </div>
+    <div class="card-body">
 
-    <!-- Tabla de detalles -->
-    <div class="card shadow-sm mb-3">
-      <div class="card-header fw-semibold">Detalle de productos / servicios</div>
-      <div class="card-body p-0">
-        <table class="table table-bordered mb-0" id="tablaDetalles">
-          <thead class="table-light">
-            <tr>
-              <th style="width:25%">Producto (opcional)</th>
-              <th>Descripción</th>
-              <th style="width:8%">Cant.</th>
-              <th style="width:12%">Precio U. (S/)</th>
-              <th style="width:10%">Subtotal</th>
-              <th style="width:5%"></th>
-            </tr>
-          </thead>
-          <tbody id="tbodyDetalles">
-            <tr class="detalle-row">
-              <td>
-                <select class="form-select form-select-sm prod-select" name="productoId"
-                        onchange="onProductoChange(this)">
-                  <option value="">-- Manual --</option>
-                  <option th:each="p : ${productos}"
-                          th:value="${p.id}"
-                          th:text="${p.nombre}"
-                          th:data-precio="${p.precio}"
-                          th:data-nombre="${p.nombre}">
-                  </option>
-                </select>
-              </td>
-              <td>
-                <input type="text" class="form-control form-control-sm desc-input"
-                       name="descripcion" placeholder="Descripción del servicio o producto" required>
-              </td>
-              <td>
-                <input type="number" class="form-control form-control-sm cant-input"
-                       name="cantidad" min="1" value="1" required
-                       oninput="calcularFila(this.closest('tr')); calcularTotales();">
-              </td>
-              <td>
-                <input type="number" class="form-control form-control-sm precio-input"
-                       name="precioUnitario" step="0.01" min="0" value="0.00" required
-                       oninput="calcularFila(this.closest('tr')); calcularTotales();">
-              </td>
-              <td class="subtotal-cell align-middle text-end text-nowrap">S/ 0.00</td>
-              <td class="align-middle text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger"
-                        onclick="removeRow(this)">✕</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer">
-        <button type="button" class="btn btn-outline-secondary btn-sm"
-                onclick="addRow()">+ Agregar línea</button>
-      </div>
+      <form th:action="@{/facturacion/guardar}" method="post" id="formComprobante">
+
+        <!-- Cabecera: cliente + tipo -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-7">
+            <label class="form-label">Cliente <span class="text-danger">*</span></label>
+            <select name="clienteId" class="form-select" required>
+              <option value="">— Seleccionar cliente —</option>
+              <option th:each="c : ${clientes}"
+                      th:value="${c.id}"
+                      th:text="${c.nombre + ' ' + c.apellido + '  ·  ' + c.dni}">
+              </option>
+            </select>
+          </div>
+          <div class="col-md-5">
+            <label class="form-label">Tipo de comprobante <span class="text-danger">*</span></label>
+            <div class="d-flex gap-2">
+              <label class="d-flex align-items-center gap-2 p-3 rounded flex-fill"
+                     style="border:1.5px solid #bfdbfe;background:#eff6ff;cursor:pointer">
+                <input type="radio" name="tipo" value="BOLETA" required
+                       onchange="document.querySelectorAll('.tipo-opt').forEach(e=>e.classList.remove('tipo-active'));this.closest('label').classList.add('tipo-active')">
+                <span class="small fw-semibold" style="color:#1d4ed8">Boleta</span>
+              </label>
+              <label class="d-flex align-items-center gap-2 p-3 rounded flex-fill"
+                     style="border:1.5px solid #bbf7d0;background:#f0fdf4;cursor:pointer">
+                <input type="radio" name="tipo" value="FACTURA"
+                       onchange="document.querySelectorAll('.tipo-opt').forEach(e=>e.classList.remove('tipo-active'));this.closest('label').classList.add('tipo-active')">
+                <span class="small fw-semibold" style="color:#15803d">Factura</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin:0 0 20px;border-color:#e9d5ff">
+
+        <!-- Tabla de detalles -->
+        <div class="mb-3">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="mb-0 fw-semibold" style="color:#3730a3">
+              <i class="fi fi-sr-list me-1"></i> Detalle de productos / servicios
+            </h6>
+            <button type="button" class="btn btn-outline-secondary btn-sm"
+                    onclick="addRow()">
+              <i class="fi fi-sr-plus me-1"></i> Agregar línea
+            </button>
+          </div>
+          <div style="border:1px solid #ddd6fe;border-radius:10px;overflow:hidden">
+            <table class="table table-bordered mb-0" id="tablaDetalles"
+                   style="border-color:#ddd6fe !important">
+              <thead style="background:#faf5ff !important">
+                <tr>
+                  <th style="width:22%">Producto (opcional)</th>
+                  <th>Descripción</th>
+                  <th style="width:7%">Cant.</th>
+                  <th style="width:12%">Precio U. (S/)</th>
+                  <th style="width:10%">Subtotal</th>
+                  <th style="width:4%"></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyDetalles">
+                <tr class="detalle-row">
+                  <td>
+                    <select class="form-select form-select-sm prod-select" name="productoId"
+                            onchange="onProductoChange(this)">
+                      <option value="">— Manual —</option>
+                      <option th:each="p : ${productos}"
+                              th:value="${p.id}"
+                              th:text="${p.nombre}"
+                              th:data-precio="${p.precio}"
+                              th:data-nombre="${p.nombre}">
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm desc-input"
+                           name="descripcion" placeholder="Descripción del servicio" required>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm cant-input"
+                           name="cantidad" min="1" value="1" required
+                           oninput="calcularFila(this.closest('tr'));calcularTotales()">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm precio-input"
+                           name="precioUnitario" step="0.01" min="0" value="0.00" required
+                           oninput="calcularFila(this.closest('tr'));calcularTotales()">
+                  </td>
+                  <td class="subtotal-cell align-middle text-end text-nowrap fw-medium">S/ 0.00</td>
+                  <td class="align-middle text-center">
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                            onclick="removeRow(this)">✕</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Método de pago + Totales -->
+        <div class="row g-3 mt-1 align-items-start">
+
+          <!-- Método de pago -->
+          <div class="col-md-7">
+            <label class="form-label">Método de pago <span class="text-danger">*</span></label>
+            <input type="hidden" name="metodoPago" id="hiddenMetodoPago" value="">
+            <div class="metodo-pago-grid">
+              <button type="button" class="btn btn-pago btn-pago-efectivo"
+                      onclick="selectPago(this,'efectivo')">
+                <i class="fi fi-sr-bill"></i><br>Efectivo
+              </button>
+              <button type="button" class="btn btn-pago btn-pago-tarjeta"
+                      onclick="selectPago(this,'tarjeta')">
+                <i class="fi fi-sr-credit-card"></i><br>Tarjeta
+              </button>
+              <button type="button" class="btn btn-pago btn-pago-plin"
+                      onclick="selectPago(this,'plin')">
+                <i class="fi fi-sr-smartphone"></i><br>Plin
+              </button>
+              <button type="button" class="btn btn-pago btn-pago-yape"
+                      onclick="selectPago(this,'yape')">
+                <i class="fi fi-sr-qrcode"></i><br>Yape
+              </button>
+              <button type="button" class="btn btn-pago btn-pago-transfer"
+                      onclick="selectPago(this,'transferencia')">
+                <i class="fi fi-sr-bank"></i><br>Transferencia
+              </button>
+            </div>
+            <div id="pagoError" class="small text-danger mt-1" style="display:none">
+              Selecciona un método de pago.
+            </div>
+          </div>
+
+          <!-- Totales -->
+          <div class="col-md-5">
+            <div class="totales-gradient">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted small">Subtotal:</span>
+                <span class="fw-semibold" id="lblSubtotal">S/ 0.00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted small">IGV (18%):</span>
+                <span class="fw-semibold" id="lblIgv">S/ 0.00</span>
+              </div>
+              <hr style="border-color:#e9d5ff;margin:10px 0">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold" style="color:#3730a3">Total:</span>
+                <span class="fw-bold fs-5" style="color:#7c3aed" id="lblTotal">S/ 0.00</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-gradient-primary px-4"
+                  onclick="return validarPago()">
+            <i class="fi fi-sr-receipt me-1"></i> Emitir Comprobante
+          </button>
+          <a th:href="@{/facturacion}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+      </form>
     </div>
+  </div>
 
-    <!-- Totales -->
-    <div class="row justify-content-end mb-4">
-      <div class="col-md-4 col-lg-3">
-        <table class="table table-sm table-borderless mb-0">
-          <tr>
-            <td class="text-muted">Subtotal:</td>
-            <td class="text-end fw-semibold" id="lblSubtotal">S/ 0.00</td>
-          </tr>
-          <tr>
-            <td class="text-muted">IGV (18%):</td>
-            <td class="text-end fw-semibold" id="lblIgv">S/ 0.00</td>
-          </tr>
-          <tr class="table-light">
-            <td class="fw-bold fs-5">Total:</td>
-            <td class="text-end fw-bold fs-5 text-primary" id="lblTotal">S/ 0.00</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-success px-4">
-        <i class="fi fi-sr-receipt me-1"></i> Emitir Comprobante
-      </button>
-      <a th:href="@{/facturacion}" class="btn btn-secondary">Cancelar</a>
-    </div>
-
-  </form>
 </div>
 
 <script>
-function addRow() {
-  const tbody = document.getElementById('tbodyDetalles');
-  const firstRow = tbody.querySelector('.detalle-row');
-  const clone = firstRow.cloneNode(true);
+function selectPago(btn, value) {
+  document.querySelectorAll('.btn-pago').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('hiddenMetodoPago').value = value;
+  document.getElementById('pagoError').style.display = 'none';
+}
 
+function validarPago() {
+  if (!document.getElementById('hiddenMetodoPago').value) {
+    document.getElementById('pagoError').style.display = '';
+    return false;
+  }
+  return true;
+}
+
+function addRow() {
+  var tbody = document.getElementById('tbodyDetalles');
+  var firstRow = tbody.querySelector('.detalle-row');
+  var clone = firstRow.cloneNode(true);
   clone.querySelector('.prod-select').value = '';
   clone.querySelector('.desc-input').value = '';
   clone.querySelector('.cant-input').value = '1';
   clone.querySelector('.precio-input').value = '0.00';
   clone.querySelector('.subtotal-cell').textContent = 'S/ 0.00';
-
   tbody.appendChild(clone);
 }
 
 function removeRow(btn) {
-  const tbody = document.getElementById('tbodyDetalles');
+  var tbody = document.getElementById('tbodyDetalles');
   if (tbody.querySelectorAll('.detalle-row').length <= 1) return;
   btn.closest('tr').remove();
   calcularTotales();
 }
 
 function onProductoChange(select) {
-  const row = select.closest('tr');
-  const opt = select.options[select.selectedIndex];
+  var row = select.closest('tr');
+  var opt = select.options[select.selectedIndex];
   if (opt.value) {
     row.querySelector('.desc-input').value = opt.getAttribute('data-nombre') || opt.text;
     row.querySelector('.precio-input').value = opt.getAttribute('data-precio') || '0.00';
@@ -166,21 +253,21 @@ function onProductoChange(select) {
 }
 
 function calcularFila(row) {
-  const cant  = parseFloat(row.querySelector('.cant-input').value) || 0;
-  const precio = parseFloat(row.querySelector('.precio-input').value) || 0;
-  const sub = cant * precio;
+  var cant   = parseFloat(row.querySelector('.cant-input').value) || 0;
+  var precio = parseFloat(row.querySelector('.precio-input').value) || 0;
+  var sub = cant * precio;
   row.querySelector('.subtotal-cell').textContent = 'S/ ' + sub.toFixed(2);
   return sub;
 }
 
 function calcularTotales() {
-  let subtotal = 0;
-  document.querySelectorAll('.detalle-row').forEach(row => {
+  var subtotal = 0;
+  document.querySelectorAll('.detalle-row').forEach(function(row) {
     subtotal += (parseFloat(row.querySelector('.cant-input').value) || 0)
               * (parseFloat(row.querySelector('.precio-input').value) || 0);
   });
-  const igv   = subtotal * 0.18;
-  const total = subtotal + igv;
+  var igv   = subtotal * 0.18;
+  var total = subtotal + igv;
   document.getElementById('lblSubtotal').textContent = 'S/ ' + subtotal.toFixed(2);
   document.getElementById('lblIgv').textContent      = 'S/ ' + igv.toFixed(2);
   document.getElementById('lblTotal').textContent    = 'S/ ' + total.toFixed(2);

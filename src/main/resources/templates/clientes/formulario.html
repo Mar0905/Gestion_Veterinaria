@@ -3,65 +3,80 @@
 <head><meta charset="UTF-8"><title>Cliente</title></head>
 <body>
 
-<div class="container-fluid" style="max-width:640px">
+<div class="container-fluid">
 
-  <h2 class="fw-bold mb-4"
-      th:text="${cliente.id != null} ? 'Editar Cliente' : 'Nuevo Cliente'">
-  </h2>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Clientes</p>
+      <h2 class="page-title"
+          th:text="${cliente.id != null} ? 'Editar Cliente' : 'Nuevo Cliente'"></h2>
+    </div>
+  </div>
 
-  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+  <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
 
-  <form th:action="${cliente.id == null} ? @{/clientes/guardar} : @{/clientes/{id}/actualizar(id=${cliente.id})}"
-        th:object="${cliente}"
-        method="post">
+  <div class="card" style="max-width:640px">
+    <div class="card-header card-header-blue"
+         th:text="${cliente.id != null} ? 'Datos del cliente' : 'Información del cliente'">
+    </div>
+    <div class="card-body">
 
-    <div class="row g-3">
+      <form th:action="${cliente.id == null} ? @{/clientes/guardar} : @{/clientes/{id}/actualizar(id=${cliente.id})}"
+            th:object="${cliente}"
+            method="post">
 
-      <div class="col-md-6">
-        <label class="form-label fw-semibold">Nombre</label>
-        <input type="text" class="form-control" th:field="*{nombre}" required maxlength="100">
-      </div>
+        <div class="row g-3">
 
-      <div class="col-md-6">
-        <label class="form-label fw-semibold">Apellido</label>
-        <input type="text" class="form-control" th:field="*{apellido}" required maxlength="100">
-      </div>
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" th:field="*{nombre}" required maxlength="100">
+          </div>
 
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">DNI</label>
-        <input type="text" class="form-control" th:field="*{dni}"
-               maxlength="8" pattern="\d{8}"
-               th:readonly="${cliente.id != null}"
-               th:classappend="${cliente.id != null} ? 'bg-light' : ''"
-               required>
-        <div class="form-text" th:if="${cliente.id != null}">El DNI no se puede modificar.</div>
-      </div>
+          <div class="col-md-6">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-control" th:field="*{apellido}" required maxlength="100">
+          </div>
 
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Teléfono</label>
-        <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
-      </div>
+          <div class="col-md-4">
+            <label class="form-label">DNI</label>
+            <input type="text" class="form-control" th:field="*{dni}"
+                   maxlength="8" pattern="\d{8}"
+                   th:readonly="${cliente.id != null}"
+                   th:classappend="${cliente.id != null} ? 'bg-light' : ''"
+                   required>
+            <div class="form-text text-muted" th:if="${cliente.id != null}">No se puede modificar.</div>
+          </div>
 
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Email</label>
-        <input type="email" class="form-control" th:field="*{email}" maxlength="100">
-      </div>
+          <div class="col-md-4">
+            <label class="form-label">Teléfono</label>
+            <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
+          </div>
 
-      <div class="col-12">
-        <label class="form-label fw-semibold">Dirección</label>
-        <input type="text" class="form-control" th:field="*{direccion}" maxlength="200">
-      </div>
+          <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" th:field="*{email}" maxlength="100">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Dirección</label>
+            <input type="text" class="form-control" th:field="*{direccion}" maxlength="200">
+          </div>
+
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-primary"
+                  th:text="${cliente.id != null} ? 'Actualizar' : 'Guardar'">
+          </button>
+          <a th:href="@{/clientes}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+      </form>
 
     </div>
+  </div>
 
-    <div class="d-flex gap-2 mt-4">
-      <button type="submit" class="btn btn-primary"
-              th:text="${cliente.id != null} ? 'Actualizar' : 'Guardar'">
-      </button>
-      <a th:href="@{/clientes}" class="btn btn-secondary">Cancelar</a>
-    </div>
-
-  </form>
 </div>
 
 </body>

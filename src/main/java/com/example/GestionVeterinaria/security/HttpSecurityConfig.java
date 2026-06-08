@@ -42,6 +42,14 @@ public class HttpSecurityConfig {
                     auth.requestMatchers("/veterinario/**")
                             .hasRole("VETERINARIO");
 
+                    // Mascotas standalone (ADMIN y RECEPCION)
+                    auth.requestMatchers("/mascotas")
+                            .hasAnyRole("ADMIN", "RECEPCION");
+
+                    // Historial (ADMIN y VETERINARIO)
+                    auth.requestMatchers("/historial")
+                            .hasAnyRole("ADMIN", "VETERINARIO");
+
                     // RECEPCION puede gestionar citas y facturación
                     auth.requestMatchers("/citas/**", "/facturacion/**")
                             .hasAnyRole("ADMIN", "RECEPCION");

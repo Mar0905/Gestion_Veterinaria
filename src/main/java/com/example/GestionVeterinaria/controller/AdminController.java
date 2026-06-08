@@ -83,7 +83,8 @@ public class AdminController {
     @GetMapping("/veterinarios/{id}/editar")
     public String editarVeterinario(@PathVariable Long id, Model model) {
         model.addAttribute("veterinario", veterinarioService.buscarId(id));
-        return "admin/editar_veterinario";
+        model.addAttribute("contenido", "admin/editar_veterinario");
+        return "layout/base";
     }
 
     @PostMapping("/veterinarios/{id}/actualizar")

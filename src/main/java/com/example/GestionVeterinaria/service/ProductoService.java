@@ -61,4 +61,14 @@ public class ProductoService {
     public long contarProximosVencer() {
         return productoRepository.findProximosVencer(LocalDate.now().plusDays(30)).size();
     }
+
+    public void registrarMovimiento(Long productoId, String tipo, Integer cantidad) {
+        Producto p = buscarPorId(productoId);
+        if ("entrada".equals(tipo)) {
+            p.setStock(p.getStock() + cantidad);
+        } else if ("salida".equals(tipo)) {
+            p.setStock(Math.max(0, p.getStock() - cantidad));
+        }
+        productoRepository.save(p);
+    }
 }

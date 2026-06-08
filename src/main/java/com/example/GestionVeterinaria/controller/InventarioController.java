@@ -21,8 +21,18 @@ public class InventarioController {
         model.addAttribute("productos", productoService.listarTodos());
         model.addAttribute("alertasStock", productoService.contarStockBajo());
         model.addAttribute("alertasVencimiento", productoService.contarProximosVencer());
+        model.addAttribute("listaStockBajo", productoService.listarStockBajo());
+        model.addAttribute("listaProximosVencer", productoService.listarProximosVencer());
         model.addAttribute("contenido", "inventario/lista");
         return "layout/base";
+    }
+
+    @PostMapping("/movimiento")
+    public String registrarMovimiento(@RequestParam Long productoId,
+                                      @RequestParam String tipo,
+                                      @RequestParam Integer cantidad) {
+        productoService.registrarMovimiento(productoId, tipo, cantidad);
+        return "redirect:/inventario";
     }
 
     @GetMapping("/nuevo")

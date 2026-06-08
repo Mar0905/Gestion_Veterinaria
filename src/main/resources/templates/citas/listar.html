@@ -5,26 +5,61 @@
 
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-bold">Agenda de Citas</h2>
-    <a th:href="@{/citas/nueva}" class="btn btn-primary">
-      <i class="fi fi-sr-plus me-1"></i> Nueva Cita
-    </a>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Citas Médicas</h2>
+      <p class="page-subtitle">Agenda de citas programadas</p>
+    </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/citas/nueva}" class="btn btn-primary">
+        <i class="fi fi-sr-plus"></i> Nueva Cita
+      </a>
+    </div>
   </div>
 
-  <div th:if="${exito}" class="alert alert-success alert-dismissible fade show">
+  <div th:if="${exito}" class="alert alert-success alert-dismissible fade show mb-3">
     <span th:text="${exito}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
-  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-3">
     <span th:text="${error}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 
-  <div class="card shadow-sm">
+  <!-- ── Calendario semanal ────────────────────────────────────── -->
+  <div class="card mb-3">
+    <div class="card-header card-header-blue d-flex align-items-center justify-content-between">
+      <span id="semanaLabel">Semana actual</span>
+      <button type="button" class="btn btn-sm btn-outline-primary" onclick="mostrarTodas()">
+        Ver todas
+      </button>
+    </div>
+    <div class="card-body" style="padding:14px !important">
+      <div class="week-calendar" id="weekCalendar"></div>
+    </div>
+  </div>
+
+  <!-- ── Search ───────────────────────────────────────────────── -->
+  <div class="card mb-3">
+    <div class="card-body" style="padding:12px 16px !important">
+      <div class="search-wrapper">
+        <i class="fi fi-sr-search search-icon"></i>
+        <input type="text" class="form-control"
+               placeholder="Buscar por mascota, veterinario o motivo..."
+               oninput="searchCitas(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabla ────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header card-header-blue d-flex justify-content-between align-items-center">
+      <span id="tableLabel">Citas del sistema</span>
+    </div>
     <div class="card-body p-0">
-      <table class="table table-hover table-striped mb-0">
-        <thead class="table-dark">
+      <table class="table table-hover mb-0" id="tablaCitas">
+        <thead>
           <tr>
             <th>Fecha</th>
             <th>Hora</th>
@@ -32,31 +67,38 @@
             <th>Veterinario</th>
             <th>Motivo</th>
             <th>Estado</th>
-            <th>Acción</th>
+            <th class="text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
           <tr th:if="${#lists.isEmpty(citas)}">
-            <td colspan="7" class="text-center text-muted py-4">No hay citas registradas.</td>
+            <td colspan="7" class="text-center text-muted py-5">
+              <i class="fi fi-sr-calendar fs-2 d-block mb-2 opacity-40"></i>
+              No hay citas registradas.
+            </td>
           </tr>
-          <tr th:each="cita : ${citas}">
+          <tr th:each="cita : ${citas}" class="cita-row"
+              th:data-fecha="${cita.fechaCita}">
             <td th:text="${cita.fechaCita}"></td>
             <td th:text="${cita.horaCita}"></td>
-            <td th:text="${cita.mascota.nombre}"></td>
+            <td class="fw-medium" th:text="${cita.mascota.nombre}"></td>
             <td th:text="${cita.veterinario.nombre}"></td>
             <td th:text="${cita.motivo ?: '—'}"></td>
             <td>
               <span class="badge"
-                    th:classappend="${cita.estado == 'Programada'} ? 'bg-primary' :
-                                    (${cita.estado == 'COMPLETADA'} ? 'bg-success' : 'bg-secondary')"
+                    th:classappend="${cita.estado == 'Programada'} ? 'badge-programada' :
+                                    (${cita.estado == 'COMPLETADA'} ? 'badge-completada' :
+                                    (${cita.estado == 'confirmado'} ? 'badge-completada' : 'badge-pendiente'))"
                     th:text="${cita.estado}">
               </span>
             </td>
-            <td>
+            <td class="text-center">
               <form th:action="@{/citas/eliminar/{id}(id=${cita.id})}"
                     method="post" class="d-inline"
                     onsubmit="return confirm('¿Eliminar esta cita?')">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                  <i class="fi fi-sr-trash"></i>
+                </button>
               </form>
             </td>
           </tr>
@@ -66,6 +108,103 @@
   </div>
 
 </div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+/* Recopilamos todas las fechas de citas para marcar puntos en el calendario */
+var citasFechas = [];
+/*[# th:each="c : ${citas}" ]*/
+citasFechas.push(/*[[${#strings.toString(c.fechaCita)}]]*/ null);
+/*[/]*/
+
+/* ── Construir calendario semanal ── */
+(function() {
+  var today = new Date();
+  today.setHours(0,0,0,0);
+
+  var dayOfWeek = today.getDay() || 7;          // domingo=7
+  var weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - dayOfWeek + 1); // lunes
+
+  var dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  var cal = document.getElementById('weekCalendar');
+
+  /* Rango de semana en label */
+  var weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  var opts = { day: 'numeric', month: 'short' };
+  document.getElementById('semanaLabel').textContent =
+    weekStart.toLocaleDateString('es-PE', opts) + ' – ' +
+    weekEnd.toLocaleDateString('es-PE', opts);
+
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+
+    var yyyy = d.getFullYear();
+    var mm   = String(d.getMonth() + 1).padStart(2, '0');
+    var dd   = String(d.getDate()).padStart(2, '0');
+    var dateStr = yyyy + '-' + mm + '-' + dd;
+
+    var hasCitas  = citasFechas.some(function(cd) { return cd === dateStr; });
+    var isToday   = d.getTime() === today.getTime();
+
+    var card = document.createElement('div');
+    card.className = 'week-day-card' + (isToday ? ' today' : '');
+    card.dataset.date = dateStr;
+    card.innerHTML =
+      '<div class="wdc-name">' + dayNames[i] + '</div>' +
+      '<div class="wdc-num">' + d.getDate() + '</div>' +
+      (hasCitas ? '<div class="wdc-dot"></div>' : '<div style="height:12px"></div>');
+
+    (function(ds, isT) {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.week-day-card').forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        filterByDate(ds);
+        document.getElementById('tableLabel').textContent = 'Citas del ' + ds;
+      });
+    })(dateStr, isToday);
+
+    if (isToday) {
+      card.classList.add('active');
+    }
+
+    cal.appendChild(card);
+  }
+
+  /* Filtrar por hoy al cargar */
+  var yy = today.getFullYear();
+  var mo = String(today.getMonth() + 1).padStart(2, '0');
+  var dy = String(today.getDate()).padStart(2, '0');
+  filterByDate(yy + '-' + mo + '-' + dy);
+  document.getElementById('tableLabel').textContent =
+    'Citas del ' + yy + '-' + mo + '-' + dy;
+})();
+
+function filterByDate(dateStr) {
+  document.querySelectorAll('.cita-row').forEach(function(row) {
+    var fecha = row.dataset.fecha || row.cells[0].textContent.trim();
+    row.style.display = (fecha === dateStr) ? '' : 'none';
+  });
+}
+
+function mostrarTodas() {
+  document.querySelectorAll('.week-day-card').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelectorAll('.cita-row').forEach(function(row) { row.style.display = ''; });
+  document.getElementById('tableLabel').textContent = 'Citas del sistema';
+}
+
+function searchCitas(input) {
+  var filter = input.value.toLowerCase();
+  document.querySelectorAll('.week-day-card').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelectorAll('.cita-row').forEach(function(row) {
+    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+  document.getElementById('tableLabel').textContent = 'Resultados de búsqueda';
+}
+/*]]>*/
+</script>
 
 </body>
 </html>

@@ -2,33 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-
-
 <head>
-    <meta charset="UTF-8">
-    <title>Veterinaria</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/estilos.css}">
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VetSys</title>
 
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Flaticon icons -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
+
+  <!-- VetSys styles -->
+  <link rel="stylesheet" th:href="@{/css/estilos.css}">
+  <link rel="stylesheet" th:href="@{/css/menu-sidebar.css}">
 </head>
 
 <body>
 
-<div class="d-flex">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div th:replace="fragments/menu :: menu"></div>
-    </aside>
+<div class="d-flex" style="min-height:100vh">
 
-    <!-- contenido-->
-    <main  class="main-content flex-fill p-4" >
-        <div th:replace="${contenido}"></div>
-    </main>
+  <!-- ── SIDEBAR ────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div th:replace="fragments/menu :: menu"></div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────── -->
+  <main class="main-content flex-fill d-flex flex-column">
+
+    <!-- Top bar: título de página + usuario -->
+    <div class="topbar" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      <span class="topbar-title" id="topbarTitle">Panel</span>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbarDate"></span>
+        <div class="topbar-user" sec:authorize="isAuthenticated()">
+          <div class="topbar-user-avatar" id="topbarAvatar">U</div>
+          <span sec:authentication="name"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic page content -->
+    <div class="content-area flex-fill">
+      <div th:replace="${contenido}"></div>
+    </div>
+
+  </main>
 
 </div>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  (function() {
+    // Fecha en español
+    var d = new Date();
+    var opts = { weekday: 'short', day: 'numeric', month: 'long' };
+    var dateEl = document.getElementById('topbarDate');
+    if (dateEl) dateEl.textContent = d.toLocaleDateString('es-PE', opts);
+
+    // Título dinámico desde h2.page-title de la página cargada
+    var titleEl = document.getElementById('topbarTitle');
+    var pageH2  = document.querySelector('.page-title');
+    if (titleEl && pageH2) titleEl.textContent = pageH2.textContent.trim();
+
+    // Avatar letra inicial del usuario
+    var avatarEl = document.getElementById('topbarAvatar');
+    var userEl   = avatarEl && avatarEl.parentElement.querySelector('span[data-username]');
+    // Fallback: leer el texto del span de nombre de usuario
+    if (avatarEl) {
+      var nameSpans = document.querySelectorAll('.topbar-user span:not(.topbar-user-avatar span)');
+      nameSpans.forEach(function(s) {
+        if (s.id !== 'topbarAvatar' && s.textContent.trim().length > 0) {
+          avatarEl.textContent = s.textContent.trim().charAt(0).toUpperCase();
+        }
+      });
+    }
+  })();
+</script>
+
 </body>
 </html>

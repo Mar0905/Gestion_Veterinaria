@@ -1,80 +1,138 @@
 <head>
-     <link rel="stylesheet" th:href="@{/css/menu-sidebar.css}">
-<script defer th:src="@{/js/menu-sidebar.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/menu-sidebar.css}">
 </head>
+
 <nav xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-     th:fragment="menu"
-     class="d-flex flex-column p-3 text-white">
-  <div class="logo-contenedor">
-    <img th:src="@{/img/logo.png}"
-          alt="Logo veterinaria"
-    >
-     <h5 class="text-white fw-bold">Veterinaria San Bernardo</h5>
+     th:fragment="menu">
+
+  <!-- ── Brand / Logo ────────────────────────────────────────── -->
+  <div class="sb-logo">
+    <div class="sb-logo-icon">
+      <i class="fi fi-sr-paw"></i>
+    </div>
+    <div>
+      <span class="sb-brand">VETSYS</span>
+      <span class="sb-tagline">Gestión Veterinaria</span>
+    </div>
+  </div>
+
+  <!-- ── Nav items ───────────────────────────────────────────── -->
+  <div class="sb-nav">
+
+    <!-- ADMIN + RECEPCION -->
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       th:href="@{/}">
+      <i class="fi fi-sr-apps"></i>
+      Dashboard
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       th:href="@{/clientes}">
+      <i class="fi fi-sr-users"></i>
+      Clientes
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       th:href="@{/mascotas}">
+      <i class="fi fi-sr-paw"></i>
+      Mascotas
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       th:href="@{/citas}">
+      <i class="fi fi-sr-calendar"></i>
+      Citas
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','VETERINARIO')"
+       th:href="@{/historial}">
+      <i class="fi fi-sr-clipboard-list"></i>
+      Historial
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('ADMIN')"
+       th:href="@{/inventario}">
+      <i class="fi fi-sr-box"></i>
+      Inventario
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       th:href="@{/facturacion}">
+      <i class="fi fi-sr-receipt"></i>
+      Facturación
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('ADMIN')"
+       th:href="@{/reportes}">
+      <i class="fi fi-sr-chart-histogram"></i>
+      Reportes
+    </a>
+
+    <hr class="sb-divider" sec:authorize="hasRole('ADMIN')">
+
+    <a class="sb-link"
+       sec:authorize="hasRole('ADMIN')"
+       th:href="@{/admin}">
+      <i class="fi fi-sr-settings"></i>
+      Administración
+    </a>
+
+    <!-- VETERINARIO -->
+    <a class="sb-link"
+       sec:authorize="hasRole('VETERINARIO')"
+       th:href="@{/veterinarios/agenda}">
+      <i class="fi fi-sr-calendar-check"></i>
+      Mi Agenda
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('VETERINARIO')"
+       th:href="@{/veterinarios/atendidas}">
+      <i class="fi fi-sr-clipboard-list"></i>
+      Atendidas
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('VETERINARIO')"
+       th:href="@{/}">
+      <i class="fi fi-sr-apps"></i>
+      Inicio
+    </a>
 
   </div>
 
-  <a class="nav-link d-flex align-items-center  me-3"
-     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
-     th:href="@{/}"
-  >
-    <!-- logo -->
-    <i class="fi fi-sr-book-open-cover me-2"></i>
-    Inicio</a>
+  <!-- ── Footer: usuario + logout ────────────────────────────── -->
+  <div class="sb-footer">
 
-  <a sec:authorize="hasRole('VETERINARIO')"
-     th:href="@{/veterinarios/agenda}" class="nav-link  d-flex align-items-center me-3">
-    Mi Agenda
-  </a>
+    <div class="sb-user" sec:authorize="isAuthenticated()">
+      <div class="sb-avatar">
+        <span sec:authentication="name" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</span>
+      </div>
+      <div>
+        <span class="sb-user-name" sec:authentication="name"></span>
+        <span class="sb-user-role"
+              sec:authorize="hasRole('ADMIN')">Administrador</span>
+        <span class="sb-user-role"
+              sec:authorize="hasRole('RECEPCION')">Recepción</span>
+        <span class="sb-user-role"
+              sec:authorize="hasRole('VETERINARIO')">Veterinario</span>
+      </div>
+    </div>
 
-  <a class="nav-link d-flex align-items-center  me-3"
-     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
-     th:href="@{/citas}"
-      >
-    <!-- logo -->
-    <i class="fi fi-sr-book-open-cover me-2"></i>
-    Agenda</a>
+    <a th:href="@{/logout}" class="sb-logout">
+      <i class="fi fi-sr-sign-out-alt"></i>
+      Cerrar Sesión
+    </a>
 
-  <a class="nav-link d-flex align-items-center  me-3"
-     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
-     th:href="@{/citas/nueva}">
-    <!-- logo -->
-    <i class="fi fi-sr-plus me-2 "></i>
-    Nueva Cita</a>
+  </div>
 
-  <a class="nav-link  d-flex align-items-center me-3"
-     sec:authorize="hasRole('ADMIN')"
-     th:href="@{/admin}">
-    <i class="fi fi-sr-user-gear me-2" ></i>
-    Administración
-  </a>
-
-  <a class="nav-link d-flex align-items-center me-3"
-     sec:authorize="hasRole('ADMIN')"
-     th:href="@{/inventario}">
-    <i class="fi fi-sr-box me-2"></i>
-    Inventario
-  </a>
-
-  <a class="nav-link d-flex align-items-center me-3"
-     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
-     th:href="@{/facturacion}">
-    <i class="fi fi-sr-receipt me-2"></i>
-    Facturación
-  </a>
-
-  <a class="nav-link d-flex align-items-center me-3"
-     sec:authorize="hasRole('ADMIN')"
-     th:href="@{/reportes}">
-    <i class="fi fi-sr-chart-histogram me-2"></i>
-    Reportes
-  </a>
-  <hr>
-
-
-  <span class="mb-2  " sec:authorize="isAuthenticated()">
-        Usuario: <b sec:authentication="name"></b>
-    </span>
-
-  <a class="nav-link "  th:href="@{/logout}">Salir</a>
 </nav>

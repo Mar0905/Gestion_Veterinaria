@@ -5,12 +5,24 @@
 
 <div class="container-fluid">
 
-  <h2 class="fw-bold mb-4">Mi Agenda — Citas Programadas</h2>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Mi Agenda</h2>
+      <p class="page-subtitle">Citas programadas para atender</p>
+    </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/veterinarios/atendidas}" class="btn btn-outline-secondary btn-sm">
+        <i class="fi fi-sr-clipboard-list"></i> Ver atendidas
+      </a>
+    </div>
+  </div>
 
-  <div class="card shadow-sm">
+  <div class="card">
+    <div class="card-header card-header-blue">Citas pendientes</div>
     <div class="card-body p-0">
       <table class="table table-hover mb-0">
-        <thead class="table-dark">
+        <thead>
           <tr>
             <th>Fecha</th>
             <th>Hora</th>
@@ -30,20 +42,18 @@
           <tr th:each="cita : ${citas}">
             <td th:text="${cita.fechaCita}"></td>
             <td th:text="${cita.horaCita}"></td>
-            <td th:text="${cita.mascota.nombre}"></td>
+            <td class="fw-medium" th:text="${cita.mascota.nombre}"></td>
             <td>
-              <span class="badge bg-secondary"
-                    th:text="${cita.mascota.especie}">
-              </span>
+              <span class="badge badge-pendiente" th:text="${cita.mascota.especie}"></span>
             </td>
             <td th:text="${cita.motivo ?: '—'}"></td>
             <td>
-              <span class="badge bg-primary" th:text="${cita.estado}"></span>
+              <span class="badge badge-programada" th:text="${cita.estado}"></span>
             </td>
             <td>
               <a th:href="@{/historial/crear/{id}(id=${cita.id})}"
-                 class="btn btn-sm btn-success">
-                <i class="fi fi-sr-stethoscope me-1"></i> Atender
+                 class="btn btn-sm btn-primary">
+                <i class="fi fi-sr-stethoscope"></i> Atender
               </a>
             </td>
           </tr>

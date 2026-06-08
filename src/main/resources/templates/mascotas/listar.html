@@ -5,37 +5,51 @@
 
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-center mb-1">
-    <div>
-      <h2 class="fw-bold mb-0">Mascotas</h2>
-      <p class="text-muted mb-0">
-        Cliente:
-        <strong th:text="${cliente.nombre + ' ' + cliente.apellido}"></strong>
-        <span class="text-muted small" th:text="'(DNI: ' + ${cliente.dni} + ')'"></span>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Gestión de Mascotas</h2>
+      <p class="page-subtitle">
+        Cliente: <strong th:text="${cliente.nombre + ' ' + cliente.apellido}"></strong>
+        <span class="text-muted" th:text="'· DNI ' + ${cliente.dni}"></span>
       </p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="page-hdr-btn d-flex gap-2">
       <a th:href="@{/clientes/{id}/mascotas/nueva(id=${cliente.id})}"
          class="btn btn-primary">
-        <i class="fi fi-sr-plus me-1"></i> Nueva Mascota
+        <i class="fi fi-sr-plus"></i> Nueva Mascota
       </a>
       <a th:href="@{/clientes}" class="btn btn-outline-secondary">
-        <i class="fi fi-sr-arrow-left me-1"></i> Volver
+        <i class="fi fi-sr-arrow-left"></i> Volver
       </a>
     </div>
   </div>
 
-  <hr class="mt-2 mb-3">
-
-  <div th:if="${exito}" class="alert alert-success alert-dismissible fade show">
+  <div th:if="${exito}" class="alert alert-success alert-dismissible fade show mb-3">
     <span th:text="${exito}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 
-  <div class="card shadow-sm">
+  <!-- ── Search ───────────────────────────────────────────────── -->
+  <div class="card mb-3">
+    <div class="card-body" style="padding:12px 16px !important">
+      <div class="search-wrapper">
+        <i class="fi fi-sr-search search-icon"></i>
+        <input type="text" class="form-control"
+               placeholder="Buscar por nombre, raza o especie..."
+               oninput="filterTable(this,'tablaMascotas')">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Table ────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header card-header-orange d-flex justify-content-between align-items-center">
+      <span th:text="'Mascotas (' + ${mascotas.size()} + ')'">Mascotas</span>
+    </div>
     <div class="card-body p-0">
-      <table class="table table-hover table-striped mb-0">
-        <thead class="table-dark">
+      <table class="table table-hover mb-0" id="tablaMascotas">
+        <thead>
           <tr>
             <th>Nombre</th>
             <th>Especie</th>
@@ -43,7 +57,7 @@
             <th>Sexo</th>
             <th>Edad</th>
             <th>Peso (kg)</th>
-            <th>Acciones</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -53,21 +67,28 @@
             </td>
           </tr>
           <tr th:each="m : ${mascotas}">
-            <td th:text="${m.nombre}"></td>
+            <td class="fw-medium" th:text="${m.nombre}"></td>
             <td>
-              <span class="badge bg-secondary" th:text="${m.especie}"></span>
+              <span class="badge"
+                    th:classappend="${m.especie == 'Perro'} ? 'badge-programada' : 'badge-disponible'"
+                    th:text="${m.especie}">
+              </span>
             </td>
             <td th:text="${m.raza ?: '—'}"></td>
             <td th:text="${m.sexo ?: '—'}"></td>
             <td th:text="${m.edad + ' año(s)'}"></td>
-            <td th:text="${m.peso}"></td>
-            <td class="text-nowrap">
+            <td th:text="${m.peso + ' kg'}"></td>
+            <td class="text-center text-nowrap">
               <a th:href="@{/clientes/{cid}/mascotas/{mid}/editar(cid=${cliente.id}, mid=${m.id})}"
-                 class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                 class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                <i class="fi fi-sr-edit"></i>
+              </a>
               <form th:action="@{/clientes/{cid}/mascotas/{mid}/eliminar(cid=${cliente.id}, mid=${m.id})}"
                     method="post" class="d-inline"
                     onsubmit="return confirm('¿Eliminar esta mascota?')">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                  <i class="fi fi-sr-trash"></i>
+                </button>
               </form>
             </td>
           </tr>
@@ -77,6 +98,15 @@
   </div>
 
 </div>
+
+<script>
+function filterTable(input, tableId) {
+  var filter = input.value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function(row) {
+    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+}
+</script>
 
 </body>
 </html>

@@ -23,6 +23,13 @@ public class HistorialController {
         this.historialRepository = historialRepository;
     }
 
+    @GetMapping
+    public String listarHistorial(Model model) {
+        model.addAttribute("historiales", historialRepository.findAll());
+        model.addAttribute("contenido", "historial/listar");
+        return "layout/base";
+    }
+
     @GetMapping("/crear/{id}")
     public String mostrarFormulario(@PathVariable Long id, Model model) {
         Cita cita = citaRepository.findById(id)

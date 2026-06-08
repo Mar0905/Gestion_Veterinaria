@@ -5,97 +5,198 @@
 
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-bold">Inventario de Productos</h2>
-    <a th:href="@{/inventario/nuevo}" class="btn btn-primary">
-      <i class="fi fi-sr-plus me-1"></i> Nuevo Producto
-    </a>
-  </div>
-
-  <!-- Alertas -->
-  <div class="row mb-3" th:if="${alertasStock > 0 or alertasVencimiento > 0}">
-    <div class="col-md-6" th:if="${alertasStock > 0}">
-      <div class="alert alert-warning d-flex align-items-center mb-2" role="alert">
-        <i class="fi fi-sr-triangle-warning me-2"></i>
-        <span>
-          <strong th:text="${alertasStock}"></strong> producto(s) con
-          <strong>stock bajo</strong> o agotado.
-        </span>
-      </div>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Inventario</h2>
+      <p class="page-subtitle">Control de productos y stock</p>
     </div>
-    <div class="col-md-6" th:if="${alertasVencimiento > 0}">
-      <div class="alert alert-danger d-flex align-items-center mb-2" role="alert">
-        <i class="fi fi-sr-calendar me-2"></i>
-        <span>
-          <strong th:text="${alertasVencimiento}"></strong> producto(s)
-          <strong>próximos a vencer</strong> (≤ 30 días).
-        </span>
-      </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/inventario/nuevo}" class="btn btn-primary">
+        <i class="fi fi-sr-plus"></i> Nuevo Producto
+      </a>
     </div>
   </div>
 
-  <!-- Tabla -->
-  <div class="card shadow-sm">
-    <div class="card-body p-0">
-      <table class="table table-hover table-striped mb-0">
-        <thead class="table-dark">
-          <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Precio (S/)</th>
-            <th>Stock</th>
-            <th>Stock mínimo</th>
-            <th>Vencimiento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:if="${#lists.isEmpty(productos)}">
-            <td colspan="8" class="text-center text-muted py-4">No hay productos registrados.</td>
-          </tr>
-          <tr th:each="p : ${productos}"
-              th:classappend="${p.vencido} ? 'table-danger' : (${p.proximoVencer} ? 'table-warning' : '')">
-            <td th:text="${p.id}"></td>
-            <td th:text="${p.nombre}"></td>
-            <td>
-              <span class="badge"
-                    th:classappend="${p.categoria == 'medicamento'} ? 'bg-info text-dark' :
-                                    (${p.categoria == 'alimento'} ? 'bg-success' : 'bg-secondary')"
-                    th:text="${p.categoria}">
-              </span>
-            </td>
-            <td th:text="${#numbers.formatDecimal(p.precio, 1, 2)}"></td>
-            <td>
-              <span th:text="${p.stock}"
-                    th:classappend="${p.stockBajo} ? 'text-danger fw-bold' : ''">
-              </span>
-              <i class="fi fi-sr-triangle-warning text-warning ms-1" th:if="${p.stockBajo}"></i>
-            </td>
-            <td th:text="${p.stockMinimo}"></td>
-            <td>
-              <span th:if="${p.fechaVencimiento != null}" th:text="${p.fechaVencimiento}"
-                    th:classappend="${p.vencido} ? 'text-danger fw-bold' :
-                                    (${p.proximoVencer} ? 'text-warning fw-bold' : '')">
-              </span>
-              <span th:if="${p.fechaVencimiento == null}" class="text-muted">—</span>
-            </td>
-            <td>
-              <a th:href="@{/inventario/{id}/editar(id=${p.id})}"
-                 class="btn btn-sm btn-outline-primary me-1">Editar</a>
-              <form th:action="@{/inventario/{id}/eliminar(id=${p.id})}"
-                    method="post" class="d-inline"
-                    onsubmit="return confirm('¿Eliminar este producto?')">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="row g-3">
+
+    <!-- ── Left: tabla de productos ─────────────────────────── -->
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header card-header-purple">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <span class="fw-semibold">Productos (<span th:text="${productos.size()}">0</span>)</span>
+            <div class="search-wrapper" style="width:240px">
+              <i class="fi fi-sr-search search-icon"></i>
+              <input type="text" class="form-control form-control-sm"
+                     placeholder="Buscar producto..."
+                     oninput="filterTable(this,'tablaInventario')"
+                     style="padding-left:32px !important">
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0" id="tablaInventario">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio (S/)</th>
+                <th>Stock</th>
+                <th>Vencimiento</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(productos)}">
+                <td colspan="6" class="text-center text-muted py-5">
+                  <i class="fi fi-sr-box fs-2 d-block mb-2 opacity-40"></i>
+                  No hay productos registrados.
+                </td>
+              </tr>
+              <tr th:each="p : ${productos}"
+                  th:classappend="${p.vencido} ? 'table-danger' : (${p.proximoVencer} ? 'table-warning' : '')">
+                <td class="fw-medium" th:text="${p.nombre}"></td>
+                <td>
+                  <span class="badge"
+                        th:classappend="${p.categoria == 'medicamento'} ? 'badge-programada' :
+                                        (${p.categoria == 'alimento'} ? 'badge-disponible' : 'badge-pendiente')"
+                        th:text="${p.categoria}">
+                  </span>
+                </td>
+                <td th:text="'S/ ' + ${#numbers.formatDecimal(p.precio, 1, 2)}"></td>
+                <td>
+                  <span class="badge"
+                        th:classappend="${p.stockBajo} ? 'badge-cancelada' : 'badge-disponible'"
+                        th:text="${p.stock}">
+                  </span>
+                  <i class="fi fi-sr-triangle-warning text-warning ms-1" th:if="${p.stockBajo}"></i>
+                </td>
+                <td>
+                  <span th:if="${p.fechaVencimiento != null}"
+                        th:text="${p.fechaVencimiento}"
+                        th:classappend="${p.vencido} ? 'text-danger fw-bold' :
+                                        (${p.proximoVencer} ? 'text-warning fw-bold' : '')">
+                  </span>
+                  <span th:if="${p.fechaVencimiento == null}" class="text-muted">—</span>
+                </td>
+                <td class="text-center text-nowrap">
+                  <a th:href="@{/inventario/{id}/editar(id=${p.id})}"
+                     class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                    <i class="fi fi-sr-edit"></i>
+                  </a>
+                  <form th:action="@{/inventario/{id}/eliminar(id=${p.id})}"
+                        method="post" class="d-inline"
+                        onsubmit="return confirm('¿Eliminar este producto?')">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                      <i class="fi fi-sr-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right: Sidebar ────────────────────────────────────── -->
+    <div class="col-lg-4">
+
+      <!-- Alertas de inventario -->
+      <div class="card mb-3">
+        <div class="card-header card-header-orange">
+          <i class="fi fi-sr-triangle-warning me-1"></i> Alertas de inventario
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+
+          <div th:if="${#lists.isEmpty(listaStockBajo) and #lists.isEmpty(listaProximosVencer)}"
+               class="text-center py-3">
+            <i class="fi fi-sr-check-circle fs-3 d-block mb-1" style="color:#10b981;opacity:.7"></i>
+            <p class="small text-muted mb-0">Sin alertas activas</p>
+          </div>
+
+          <div th:each="p : ${listaStockBajo}"
+               class="d-flex align-items-start gap-2 p-2 rounded"
+               style="background:#fff7ed;border:1px solid #fed7aa">
+            <i class="fi fi-sr-triangle-warning mt-1 flex-shrink-0" style="color:#ea580c"></i>
+            <div class="min-w-0">
+              <p class="small fw-semibold mb-0" style="color:#7c2d12" th:text="${p.nombre}"></p>
+              <p class="small mb-0" style="color:#9a3412">
+                Stock: <strong th:text="${p.stock}"></strong>
+                / mín <span th:text="${p.stockMinimo}"></span>
+              </p>
+            </div>
+          </div>
+
+          <div th:each="p : ${listaProximosVencer}"
+               class="d-flex align-items-start gap-2 p-2 rounded"
+               style="background:#ecfdf5;border:1px solid #a7f3d0">
+            <i class="fi fi-sr-calendar mt-1 flex-shrink-0" style="color:#059669"></i>
+            <div class="min-w-0">
+              <p class="small fw-semibold mb-0" style="color:#064e3b" th:text="${p.nombre}"></p>
+              <p class="small mb-0" style="color:#065f46">
+                Vence: <span th:text="${p.fechaVencimiento}"></span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Registrar movimiento -->
+      <div class="card">
+        <div class="card-header card-header-green">
+          <i class="fi fi-sr-box me-1"></i> Registrar movimiento
+        </div>
+        <div class="card-body">
+          <form th:action="@{/inventario/movimiento}" method="post">
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de movimiento</label>
+              <select name="tipo" class="form-select" required>
+                <option value="entrada">Entrada (sumar stock)</option>
+                <option value="salida">Salida (restar stock)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Producto</label>
+              <select name="productoId" class="form-select" required>
+                <option value="">— Seleccionar —</option>
+                <option th:each="p : ${productos}"
+                        th:value="${p.id}"
+                        th:text="${p.nombre + ' (stock: ' + p.stock + ')'}">
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Cantidad</label>
+              <input type="number" name="cantidad" class="form-control" min="1" value="1" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fi fi-sr-check me-1"></i> Registrar
+            </button>
+
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </div>
+
+<script>
+function filterTable(input, tableId) {
+  var filter = input.value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function(row) {
+    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+}
+</script>
 
 </body>
 </html>

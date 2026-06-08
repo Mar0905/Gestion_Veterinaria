@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Mascotas</title></head>
+<body>
+
+<div class="container-fluid">
+
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h2 class="page-title">Gestión de Mascotas</h2>
+      <p class="page-subtitle">Todas las mascotas registradas en el sistema</p>
+    </div>
+    <div class="page-hdr-btn">
+      <a th:href="@{/clientes}" class="btn btn-primary">
+        <i class="fi fi-sr-plus"></i> Nueva Mascota
+      </a>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="card mb-3">
+    <div class="card-body" style="padding:12px 16px !important">
+      <div class="search-wrapper">
+        <i class="fi fi-sr-search search-icon"></i>
+        <input type="text" class="form-control"
+               placeholder="Buscar por nombre, propietario, raza o especie..."
+               oninput="filterTable(this,'tablaMascotas')">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header card-header-orange d-flex justify-content-between align-items-center">
+      <span th:text="'Lista de Mascotas (' + ${mascotas.size()} + ')'">Lista de Mascotas</span>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0" id="tablaMascotas">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Propietario</th>
+            <th>Edad</th>
+            <th>Peso</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(mascotas)}">
+            <td colspan="7" class="text-center text-muted py-4">
+              No hay mascotas registradas.
+            </td>
+          </tr>
+          <tr th:each="m : ${mascotas}">
+            <td class="fw-medium" th:text="${m.nombre}"></td>
+            <td>
+              <span class="badge"
+                    th:classappend="${m.especie == 'Perro'} ? 'badge-programada' : 'badge-disponible'"
+                    th:text="${m.especie}">
+              </span>
+            </td>
+            <td th:text="${m.raza ?: '—'}"></td>
+            <td th:text="${m.cliente.nombre + ' ' + m.cliente.apellido}"></td>
+            <td th:text="${m.edad + ' año(s)'}"></td>
+            <td th:text="${m.peso + ' kg'}"></td>
+            <td class="text-center">
+              <a th:href="@{/clientes/{cid}/mascotas(cid=${m.cliente.id})}"
+                 class="btn btn-sm btn-outline-secondary" title="Ver mascotas del cliente">
+                <i class="fi fi-sr-eye"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function filterTable(input, tableId) {
+  var filter = input.value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function(row) {
+    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>

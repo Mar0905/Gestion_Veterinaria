@@ -3,60 +3,76 @@
 <head><meta charset="UTF-8"><title>Nueva Cita</title></head>
 <body>
 
-<div class="container-fluid" style="max-width:620px">
+<div class="container-fluid">
 
-  <h2 class="fw-bold mb-4">Nueva Cita</h2>
-
-  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-  <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
-
-  <form th:action="@{/citas/guardar}" th:object="${cita}" method="post">
-
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Mascota</label>
-      <select class="form-select" name="mascotaId" required>
-        <option value="">-- Seleccionar --</option>
-        <option th:each="m : ${mascotas}"
-                th:value="${m.id}"
-                th:text="${m.nombre + ' (' + m.especie + ') — ' + m.cliente.nombre + ' ' + m.cliente.apellido}">
-        </option>
-      </select>
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Agenda</p>
+      <h2 class="page-title">Nueva Cita</h2>
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Veterinario</label>
-      <select class="form-select" name="veterinarioId" required>
-        <option value="">-- Seleccionar --</option>
-        <option th:each="v : ${veterinarios}"
-                th:value="${v.id}"
-                th:text="${v.nombre + ' — ' + v.especialidad}">
-        </option>
-      </select>
+  <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
+  <div th:if="${exito}" class="alert alert-success mb-3" th:text="${exito}"></div>
+
+  <div class="card" style="max-width:620px">
+    <div class="card-header card-header-blue">Datos de la cita</div>
+    <div class="card-body">
+
+      <form th:action="@{/citas/guardar}" th:object="${cita}" method="post">
+
+        <div class="mb-3">
+          <label class="form-label">Mascota</label>
+          <select class="form-select" name="mascotaId" required>
+            <option value="">— Seleccionar mascota —</option>
+            <option th:each="m : ${mascotas}"
+                    th:value="${m.id}"
+                    th:text="${m.nombre + ' (' + m.especie + ') — ' + m.cliente.nombre + ' ' + m.cliente.apellido}">
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Veterinario</label>
+          <select class="form-select" name="veterinarioId" required>
+            <option value="">— Seleccionar veterinario —</option>
+            <option th:each="v : ${veterinarios}"
+                    th:value="${v.id}"
+                    th:text="${v.nombre + ' — ' + v.especialidad}">
+            </option>
+          </select>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Fecha</label>
+            <input type="date" class="form-control" th:field="*{fechaCita}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Hora</label>
+            <input type="time" class="form-control" th:field="*{horaCita}" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Motivo</label>
+          <textarea class="form-control" th:field="*{motivo}" rows="2"
+                    placeholder="Motivo de la cita..." required></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="fi fi-sr-check"></i> Registrar Cita
+          </button>
+          <a th:href="@{/citas}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 
-    <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <label class="form-label fw-semibold">Fecha</label>
-        <input type="date" class="form-control" th:field="*{fechaCita}" required>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-semibold">Hora</label>
-        <input type="time" class="form-control" th:field="*{horaCita}" required>
-      </div>
-    </div>
-
-    <div class="mb-4">
-      <label class="form-label fw-semibold">Motivo</label>
-      <textarea class="form-control" th:field="*{motivo}" rows="2"
-                placeholder="Motivo de la cita..." required></textarea>
-    </div>
-
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary px-4">Registrar Cita</button>
-      <a th:href="@{/citas}" class="btn btn-secondary">Cancelar</a>
-    </div>
-
-  </form>
 </div>
 
 </body>
