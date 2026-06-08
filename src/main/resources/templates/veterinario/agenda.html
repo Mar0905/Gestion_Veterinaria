@@ -1,37 +1,58 @@
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-  <title>Mi Agenda</title>
-</head>
-
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Mi Agenda</title></head>
 <body>
 
-<h2>Mis Citas</h2>
+<div class="container-fluid">
 
-<table class="table">
-  <tr>
-    <th>Fecha</th>
-    <th>Mascota</th>
-    <th>Estado</th>
-    <th scope="col"> </th>
-  </tr>
+  <h2 class="fw-bold mb-4">Mi Agenda — Citas Programadas</h2>
 
-  <tbody>
-  <tr th:each="cita : ${citas}">
-    <td th:text="${cita.fechaCita}"></td>
-    <td th:text="${cita.mascota.nombre}"></td>
-    <td th:text="${cita.estado}"></td>
-    <td>
-      <form th:action="@{/historial/crear/{id}(id=${cita.id})}"
-            method="get">
-        <button type="submit" class="btn btn-success">
-          Atender
-        </button>
-      </form>
-    </td>
-  </tr>
-  </tbody>
-</table>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Mascota</th>
+            <th>Especie</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(citas)}">
+            <td colspan="7" class="text-center text-muted py-4">
+              No tienes citas programadas.
+            </td>
+          </tr>
+          <tr th:each="cita : ${citas}">
+            <td th:text="${cita.fechaCita}"></td>
+            <td th:text="${cita.horaCita}"></td>
+            <td th:text="${cita.mascota.nombre}"></td>
+            <td>
+              <span class="badge bg-secondary"
+                    th:text="${cita.mascota.especie}">
+              </span>
+            </td>
+            <td th:text="${cita.motivo ?: '—'}"></td>
+            <td>
+              <span class="badge bg-primary" th:text="${cita.estado}"></span>
+            </td>
+            <td>
+              <a th:href="@{/historial/crear/{id}(id=${cita.id})}"
+                 class="btn btn-sm btn-success">
+                <i class="fi fi-sr-stethoscope me-1"></i> Atender
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 
 </body>
 </html>

@@ -1,34 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Veterinario</title></head>
 <body>
-<h2>Registrar veterinario</h2>
 
-<form th:action="@{/veterinarios/guardar}"
-      th:object="${veterinario}"
-      method="post" >
+<div class="container-fluid" style="max-width:500px">
 
-    <label>nombre</label>
-    <input type="text" th:field="*{nombre}" required>
-    <br><br>
+  <h2 class="fw-bold mb-4">Registrar Veterinario</h2>
 
-    <label > Especialidad</label>
-    <input  type="text" th:field="*{especialidad}">
-    <br><br>
+  <form th:action="@{/veterinarios/guardar}" th:object="${veterinario}" method="post">
 
-    <label>telefono</label>
-    <input type="text" maxlength="9" th:field="*{telefono}">
-    <br><br>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Nombre</label>
+      <input type="text" class="form-control" th:field="*{nombre}" required>
+    </div>
 
-    <button type="submit"> guardar veterinario</button>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Especialidad</label>
+      <input type="text" class="form-control" th:field="*{especialidad}" required>
+    </div>
 
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Teléfono</label>
+      <input type="text" class="form-control" th:field="*{telefono}" maxlength="9">
+    </div>
 
-</form>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a th:href="@{/veterinarios}" class="btn btn-secondary">Cancelar</a>
+    </div>
 
-<a th:href="@{/veterinarios}"> ATRAS</a>
+  </form>
+</div>
 
 </body>
 </html>

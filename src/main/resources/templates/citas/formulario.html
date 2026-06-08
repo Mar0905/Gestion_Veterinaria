@@ -1,69 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" th:href="@{/css/citas-form.css}">
-<script defer th:src="@{/js/citas-form.js}"></script>
-</head>   
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Nueva Cita</title></head>
 <body>
 
-<div class="contenedorCitas">
-<h2>Registrar Cita</h2>
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
+<div class="container-fluid" style="max-width:620px">
 
-    <div th:if="${exito}" class="alert alert-success">
-        <span th:text="${exito}"></span>
-    </div>
-<form th:action="@{/citas/guardar}"
-      th:object="${cita}"
-      method="post">
-    <div class="formularioCitas">
+  <h2 class="fw-bold mb-4">Nueva Cita</h2>
 
-    <!-- Mascota -->
-    <label  class="form-label">Mascota:</label>
-    <select class="form-select" aria-label="mascotas" name="mascotaId" required>
-        <option value="">Seleccione</option>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+  <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+
+  <form th:action="@{/citas/guardar}" th:object="${cita}" method="post">
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Mascota</label>
+      <select class="form-select" name="mascotaId" required>
+        <option value="">-- Seleccionar --</option>
         <option th:each="m : ${mascotas}"
                 th:value="${m.id}"
-                th:text="${m.nombre}">
+                th:text="${m.nombre + ' (' + m.especie + ') — ' + m.cliente.nombre + ' ' + m.cliente.apellido}">
         </option>
-    </select>
+      </select>
+    </div>
 
-
-
-    <!-- Veterinario -->
-    <label class="form-label">Veterinario:</label>
-    <select class="form-select" name="veterinarioId" required>
-        <option value="">Seleccione</option>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Veterinario</label>
+      <select class="form-select" name="veterinarioId" required>
+        <option value="">-- Seleccionar --</option>
         <option th:each="v : ${veterinarios}"
                 th:value="${v.id}"
-                th:text="${v.nombre}">
+                th:text="${v.nombre + ' — ' + v.especialidad}">
         </option>
-    </select>
-
-
-    <!-- Fecha -->
-    <label class="form-label">Fecha:</label>
-    <input  class="form-control" type="date" th:field="*{fechaCita}" required>
-
-
-
-    <!-- Hora -->
-    <label class="form-label">Hora:</label>
-    <input  class="form-control" type="time" th:field="*{horaCita}" required>
-
-
-    <!-- Motivo -->
-    <label class="form-label">Motivo:</label>
-    <textarea class="form-control"
-              th:field="*{motivo}" required></textarea>
-
-
-
-    <button type="submit"  class="btn btn-success" >Registrar</button>
+      </select>
     </div>
-</form>
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Fecha</label>
+        <input type="date" class="form-control" th:field="*{fechaCita}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Hora</label>
+        <input type="time" class="form-control" th:field="*{horaCita}" required>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Motivo</label>
+      <textarea class="form-control" th:field="*{motivo}" rows="2"
+                placeholder="Motivo de la cita..." required></textarea>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary px-4">Registrar Cita</button>
+      <a th:href="@{/citas}" class="btn btn-secondary">Cancelar</a>
+    </div>
+
+  </form>
 </div>
+
 </body>
 </html>

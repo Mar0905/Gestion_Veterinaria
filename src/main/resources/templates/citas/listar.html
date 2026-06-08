@@ -1,45 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda de Citas</title>
-<link rel="stylesheet" th:href="@{/css/agenda-citas.css}">
-<script defer th:src="@{/js/agenda-citas.js}"></script>
-    </head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Citas</title></head>
 <body>
 
-<h2>Agenda de Citas</h2>
+<div class="container-fluid">
 
-<table class="table ">
-    <tr>
-        <th scope="col">Fecha</th>
-        <th scope="col">Mascota</th>
-        <th scope="col">Veterinario</th>
-        <th scope="col">Estado</th>
-        <th scope="col"> </th>
-        <th scope="col"></th>
-    </tr>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold">Agenda de Citas</h2>
+    <a th:href="@{/citas/nueva}" class="btn btn-primary">
+      <i class="fi fi-sr-plus me-1"></i> Nueva Cita
+    </a>
+  </div>
 
-    <tbody>
-    <tr th:each="cita : ${citas}">
-        <td th:text="${cita.fechaCita}"></td>
-        <td th:text="${cita.mascota.nombre}"></td>
-        <td th:text="${cita.veterinario.nombre}"></td>
-        <td th:text="${cita.estado}"></td>
-        <td>
-            <form th:action="@{/citas/eliminar/{id}(id=${cita.id})}"
-                  method="post">
-                <button type="submit" class="btn btn-danger">
-                    Eliminar
-                </button>
-            </form>
-        </td>
-        <td>
+  <div th:if="${exito}" class="alert alert-success alert-dismissible fade show">
+    <span th:text="${exito}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+    <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
 
-    </tr>
-    </tbody>
-</table>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Mascota</th>
+            <th>Veterinario</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(citas)}">
+            <td colspan="7" class="text-center text-muted py-4">No hay citas registradas.</td>
+          </tr>
+          <tr th:each="cita : ${citas}">
+            <td th:text="${cita.fechaCita}"></td>
+            <td th:text="${cita.horaCita}"></td>
+            <td th:text="${cita.mascota.nombre}"></td>
+            <td th:text="${cita.veterinario.nombre}"></td>
+            <td th:text="${cita.motivo ?: '—'}"></td>
+            <td>
+              <span class="badge"
+                    th:classappend="${cita.estado == 'Programada'} ? 'bg-primary' :
+                                    (${cita.estado == 'COMPLETADA'} ? 'bg-success' : 'bg-secondary')"
+                    th:text="${cita.estado}">
+              </span>
+            </td>
+            <td>
+              <form th:action="@{/citas/eliminar/{id}(id=${cita.id})}"
+                    method="post" class="d-inline"
+                    onsubmit="return confirm('¿Eliminar esta cita?')">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 
 </body>
 </html>

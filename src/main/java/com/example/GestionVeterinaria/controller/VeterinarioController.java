@@ -68,17 +68,13 @@ public class VeterinarioController
 
         model.addAttribute("citas", citas);
         model.addAttribute("contenido", "veterinario/agenda");
-
         return "layout/base";
     }
+
     @GetMapping("/atendidas")
     public String verAtendidas(Model model, Authentication authentication) {
-
         String username = authentication.getName();
-
-        Usuarios usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow();
-
+        Usuarios usuario = usuarioRepository.findByUsername(username).orElseThrow();
         Long veterinarioId = usuario.getVeterinario().getId();
 
         List<Cita> citas = citaRepository
@@ -86,7 +82,6 @@ public class VeterinarioController
 
         model.addAttribute("citas", citas);
         model.addAttribute("contenido", "veterinario/atendidas");
-
         return "layout/base";
     }
 

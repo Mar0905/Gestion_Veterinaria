@@ -36,7 +36,8 @@ public class AdminController {
         model.addAttribute("clientes", clienteService.listarTodos());
         model.addAttribute("veterinarios", veterinarioService.listarTodos());
         model.addAttribute("citas", citaService.listarTodo());
-        return "admin/panel";
+        model.addAttribute("contenido", "admin/panel");
+        return "layout/base";
     }
 
     @GetMapping("/eliminarCliente/{id}")
@@ -56,11 +57,11 @@ public class AdminController {
     }
 
 
-    // Mostrar formulario
     @GetMapping("/veterinarios/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("veterinario", new Veterinario());
-        return "admin/crear_veterinario";
+        model.addAttribute("contenido", "admin/crear_veterinario");
+        return "layout/base";
     }
 
     @PostMapping("/veterinarios/guardar")

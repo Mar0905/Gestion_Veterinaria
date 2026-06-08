@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Veterinarios</title></head>
 <body>
 
+<div class="container-fluid">
 
-<table>
-    <tr>
+  <h2 class="fw-bold mb-4">Veterinarios</h2>
 
-        <th> Nombre </th>
-        <th>Especialidad </th>
-        <th>telefono </th>
-        <th> CitasPendientes</th>
-        <th> Disponibilidad</th>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Especialidad</th>
+            <th>Teléfono</th>
+            <th>Citas totales</th>
+            <th>Disponibilidad hoy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(veterinarios)}">
+            <td colspan="5" class="text-center text-muted py-4">No hay veterinarios registrados.</td>
+          </tr>
+          <tr th:each="v : ${veterinarios}">
+            <td th:text="${v.nombre}"></td>
+            <td th:text="${v.especialidad ?: '—'}"></td>
+            <td th:text="${v.telefono ?: '—'}"></td>
+            <td th:text="${veterinarioService.contarCitas(v.id)}"></td>
+            <td>
+              <span class="badge"
+                    th:with="disp=${veterinarioService.disponibilidadHoy(v.id)}"
+                    th:classappend="${disp == 'Disponible'} ? 'bg-success' : 'bg-danger'"
+                    th:text="${disp}">
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    </tr>
+</div>
 
-    <tr th:each = "c : ${veterinarios}">
-        <td th:text="${c.nombre}"></td>
-        <td  th:text="${c.especialidad}"></td>
-        <td  th:text="${c.telefono}"></td>
-        <td th:text="${veterinarioService.contarCitas(c.id)}"> </td>
-        <td th:text="${veterinarioService.disponibilidadHoy(c.id)}"></td>
-
-    </tr>
-
-    <a th:href="@{/}"> volver clientes </a>
-
-
-
-</table>
 </body>
 </html>

@@ -1,122 +1,159 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel Administrativo</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/admin-panel.css}">
-<script defer th:src="@{/js/admin-panel.js}"></script>
-</head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Panel Admin</title></head>
 <body>
-<h2>Panel de Administración</h2>
-<h3>Clientes</h3>
-<table>
-  <tr th:each="c : ${clientes}">
-    <td th:text="${c.nombre}"></td>
 
-    <td>
-      <a th:href="@{/admin/eliminarCliente/{id}(id=${c.id})}">
-        Eliminar
+<div class="container-fluid">
+
+  <h2 class="fw-bold mb-4">Panel de Administración</h2>
+
+  <!-- ── Clientes ─────────────────────────────────────────── -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">Clientes</span>
+      <a th:href="@{/clientes/nuevo}" class="btn btn-sm btn-primary">
+        <i class="fi fi-sr-plus me-1"></i> Nuevo
       </a>
-    </td>
-  </tr>
-</table>
-
-<h3>Veterinarios</h3>
-<table>
-  <tr th:each="v : ${veterinarios}">
-    <td th:text="${v.nombre}"></td>
-    <td th:text="${v.especialidad}"></td>
-    <td>
-      <a th:href="@{/admin/veterinarios/{id}/editar(id=${v.id})}"
-         class="btn btn-sm btn-outline-primary me-1">Editar</a>
-      <a th:href="@{/admin/eliminarVeterinario/{id}(id=${v.id})}"
-         class="btn btn-sm btn-outline-danger"
-         onclick="return confirm('¿Eliminar este veterinario?')">Eliminar</a>
-    </td>
-  </tr>
-</table>
-
-<h3>Citas</h3>
-<table>
-  <tr th:each="c : ${citas}">
-    <td th:text="${c.fechaCita}"></td>
-    <td th:text="${c.estado}"></td>
-    <td>
-      <button class="btn btn-info"
-              data-bs-toggle="modal"
-              th:data-bs-target="'#modal' + ${c.id}">
-        Detalles
-      </button>
-    </td>
-
-    <td>
-      <a th:href="@{/admin/eliminarCita/{id}(id=${c.id})}">
-        Eliminar
-      </a>
-    </td>
-  </tr>
-</table>
-<div th:each="c : ${citas}">
-
-  <div class="modal fade"
-       th:id="'modal' + ${c.id}"
-       tabindex="-1">
-
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h5 class="modal-title">
-            Detalles de la Cita
-          </h5>
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal">
-          </button>
-        </div>
-
-        <div class="modal-body">
-
-          <p><strong>Fecha:</strong>
-            <span th:text="${c.fechaCita}"></span>
-          </p>
-
-          <p><strong>Hora:</strong>
-            <span th:text="${c.horaCita}"></span>
-          </p>
-
-          <div th:if="${c.historialClinico != null}">
-
-            <p><strong>Diagnóstico:</strong>
-              <span th:text="${c.historialClinico.diagnostico}"></span>
-            </p>
-
-            <p><strong>Tratamiento:</strong>
-              <span th:text="${c.historialClinico.tratamiento}"></span>
-            </p>
-
-            <p><strong>Observaciones:</strong>
-              <span th:text="${c.historialClinico.observaciones}"></span>
-            </p>
-
-          </div>
-          <div th:if="${c.historialClinico == null}">
-
-          </div>
-
-        </div>
-
-      </div>
     </div>
+    <div class="card-body p-0">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>DNI</th><th>Nombre</th><th>Apellido</th><th>Teléfono</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(clientes)}">
+            <td colspan="5" class="text-center text-muted py-3">Sin clientes.</td>
+          </tr>
+          <tr th:each="c : ${clientes}">
+            <td th:text="${c.dni}"></td>
+            <td th:text="${c.nombre}"></td>
+            <td th:text="${c.apellido}"></td>
+            <td th:text="${c.telefono ?: '—'}"></td>
+            <td class="text-end">
+              <a th:href="@{/clientes/{id}/editar(id=${c.id})}"
+                 class="btn btn-sm btn-outline-primary me-1">Editar</a>
+              <a th:href="@{/admin/eliminarCliente/{id}(id=${c.id})}"
+                 class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('¿Eliminar cliente?')">Eliminar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
+  <!-- ── Veterinarios ──────────────────────────────────────── -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">Veterinarios</span>
+      <a th:href="@{/admin/veterinarios/nuevo}" class="btn btn-sm btn-primary">
+        <i class="fi fi-sr-plus me-1"></i> Nuevo
+      </a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-light">
+          <tr><th>Nombre</th><th>Especialidad</th><th>Teléfono</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(veterinarios)}">
+            <td colspan="4" class="text-center text-muted py-3">Sin veterinarios.</td>
+          </tr>
+          <tr th:each="v : ${veterinarios}">
+            <td th:text="${v.nombre}"></td>
+            <td th:text="${v.especialidad ?: '—'}"></td>
+            <td th:text="${v.telefono ?: '—'}"></td>
+            <td class="text-end">
+              <a th:href="@{/admin/veterinarios/{id}/editar(id=${v.id})}"
+                 class="btn btn-sm btn-outline-primary me-1">Editar</a>
+              <a th:href="@{/admin/eliminarVeterinario/{id}(id=${v.id})}"
+                 class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('¿Eliminar veterinario?')">Eliminar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Citas ─────────────────────────────────────────────── -->
+  <div class="card shadow-sm">
+    <div class="card-header fw-semibold">Citas</div>
+    <div class="card-body p-0">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Fecha</th><th>Hora</th><th>Mascota</th>
+            <th>Veterinario</th><th>Estado</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(citas)}">
+            <td colspan="6" class="text-center text-muted py-3">Sin citas.</td>
+          </tr>
+          <tr th:each="c : ${citas}">
+            <td th:text="${c.fechaCita}"></td>
+            <td th:text="${c.horaCita}"></td>
+            <td th:text="${c.mascota.nombre}"></td>
+            <td th:text="${c.veterinario.nombre}"></td>
+            <td>
+              <span class="badge"
+                    th:classappend="${c.estado == 'Programada'} ? 'bg-primary' :
+                                    (${c.estado == 'COMPLETADA'} ? 'bg-success' : 'bg-secondary')"
+                    th:text="${c.estado}">
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-info me-1"
+                      data-bs-toggle="modal"
+                      th:data-bs-target="'#modal' + ${c.id}">
+                Detalle
+              </button>
+              <a th:href="@{/admin/eliminarCita/{id}(id=${c.id})}"
+                 class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('¿Eliminar cita?')">Eliminar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>
-<a th:href="@{/admin/veterinarios/nuevo}" class="btn btn-primary">
-  Crear Veterinario
-</a>
-<a th:href="@{/}"> atrás</a>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modales de detalle de citas -->
+<div th:each="c : ${citas}">
+  <div class="modal fade" th:id="'modal' + ${c.id}" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalle de la Cita</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Fecha:</strong> <span th:text="${c.fechaCita}"></span></p>
+          <p><strong>Hora:</strong> <span th:text="${c.horaCita}"></span></p>
+          <p><strong>Mascota:</strong> <span th:text="${c.mascota.nombre}"></span></p>
+          <p><strong>Motivo:</strong> <span th:text="${c.motivo ?: '—'}"></span></p>
+          <div th:if="${c.historialClinico != null}">
+            <hr>
+            <p><strong>Diagnóstico:</strong> <span th:text="${c.historialClinico.diagnostico}"></span></p>
+            <p><strong>Tratamiento:</strong> <span th:text="${c.historialClinico.tratamiento}"></span></p>
+            <p th:if="${c.historialClinico.observaciones != null}">
+              <strong>Observaciones:</strong>
+              <span th:text="${c.historialClinico.observaciones}"></span>
+            </p>
+          </div>
+          <div th:if="${c.historialClinico == null}">
+            <p class="text-muted fst-italic">Sin historial clínico registrado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

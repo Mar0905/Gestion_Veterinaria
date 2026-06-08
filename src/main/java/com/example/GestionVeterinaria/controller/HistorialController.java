@@ -13,16 +13,18 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/historial")
 public class HistorialController {
+
     private final CitaRepository citaRepository;
-    private  final HistorialClinicoRepository historialRepository;
-    public HistorialController(CitaRepository citaRepository, HistorialClinicoRepository historialRepository) {
+    private final HistorialClinicoRepository historialRepository;
+
+    public HistorialController(CitaRepository citaRepository,
+                               HistorialClinicoRepository historialRepository) {
         this.citaRepository = citaRepository;
         this.historialRepository = historialRepository;
     }
 
     @GetMapping("/crear/{id}")
     public String mostrarFormulario(@PathVariable Long id, Model model) {
-
         Cita cita = citaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
@@ -30,18 +32,16 @@ public class HistorialController {
         historial.setMascota(cita.getMascota());
 
         model.addAttribute("historial", historial);
+        model.addAttribute("cita", cita);
         model.addAttribute("citaId", id);
-
-        return "historial/formulario";
+        model.addAttribute("contenido", "historial/formulario");
+        return "layout/base";
     }
 
-
     @PostMapping("/guardar")
-    public String guardarHistorial(HistorialClinico historial,
+    public String guardarHistorial(@ModelAttribute HistorialClinico historial,
                                    @RequestParam Long citaId) {
-
-        Cita cita = citaRepository.findById(citaId)
-                .orElseThrow();
+        Cita cita = citaRepository.findById(citaId).orElseThrow();
 
         historial.setMascota(cita.getMascota());
         historial.setCita(cita);
