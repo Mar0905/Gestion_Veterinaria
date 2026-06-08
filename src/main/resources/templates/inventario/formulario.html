@@ -9,77 +9,60 @@
       th:text="${producto.id != null} ? 'Editar Producto' : 'Nuevo Producto'">
   </h2>
 
-  <!-- Guardar nuevo -->
-  <form th:if="${producto.id == null}"
-        th:action="@{/inventario/guardar}"
+  <form th:action="${producto.id == null} ? @{/inventario/guardar} : @{/inventario/{id}/actualizar(id=${producto.id})}"
         th:object="${producto}"
         method="post">
 
-    <div th:replace="~{inventario/formulario :: campos}"></div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Nombre</label>
+      <input type="text" class="form-control" th:field="*{nombre}"
+             placeholder="Ej. Amoxicilina 500mg" required maxlength="150">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Categoría</label>
+      <select class="form-select" th:field="*{categoria}" required>
+        <option value="">-- Seleccionar --</option>
+        <option value="medicamento">Medicamento</option>
+        <option value="alimento">Alimento</option>
+        <option value="accesorio">Accesorio</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Precio (S/)</label>
+        <input type="number" class="form-control" th:field="*{precio}"
+               step="0.01" min="0" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Stock actual</label>
+        <input type="number" class="form-control" th:field="*{stock}"
+               min="0" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label fw-semibold">Stock mínimo</label>
+        <input type="number" class="form-control" th:field="*{stockMinimo}"
+               min="0" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        Fecha de vencimiento <span class="text-muted">(opcional)</span>
+      </label>
+      <input type="date" class="form-control" th:field="*{fechaVencimiento}">
+    </div>
 
     <div class="d-flex gap-2 mt-3">
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="submit" class="btn btn-primary">
+        <span th:text="${producto.id != null} ? 'Actualizar' : 'Guardar'"></span>
+      </button>
       <a th:href="@{/inventario}" class="btn btn-secondary">Cancelar</a>
     </div>
+
   </form>
-
-  <!-- Actualizar existente -->
-  <form th:if="${producto.id != null}"
-        th:action="@{/inventario/{id}/actualizar(id=${producto.id})}"
-        th:object="${producto}"
-        method="post">
-
-    <div th:replace="~{inventario/formulario :: campos}"></div>
-
-    <div class="d-flex gap-2 mt-3">
-      <button type="submit" class="btn btn-primary">Actualizar</button>
-      <a th:href="@{/inventario}" class="btn btn-secondary">Cancelar</a>
-    </div>
-  </form>
-
 </div>
-
-<!-- Fragment reutilizable con los campos -->
-<th:block th:fragment="campos">
-  <div class="mb-3">
-    <label class="form-label fw-semibold">Nombre</label>
-    <input type="text" class="form-control" th:field="*{nombre}"
-           placeholder="Ej. Amoxicilina 500mg" required maxlength="150">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label fw-semibold">Categoría</label>
-    <select class="form-select" th:field="*{categoria}" required>
-      <option value="">-- Seleccionar --</option>
-      <option value="medicamento">Medicamento</option>
-      <option value="alimento">Alimento</option>
-      <option value="accesorio">Accesorio</option>
-    </select>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4 mb-3">
-      <label class="form-label fw-semibold">Precio (S/)</label>
-      <input type="number" class="form-control" th:field="*{precio}"
-             step="0.01" min="0" required>
-    </div>
-    <div class="col-md-4 mb-3">
-      <label class="form-label fw-semibold">Stock actual</label>
-      <input type="number" class="form-control" th:field="*{stock}"
-             min="0" required>
-    </div>
-    <div class="col-md-4 mb-3">
-      <label class="form-label fw-semibold">Stock mínimo</label>
-      <input type="number" class="form-control" th:field="*{stockMinimo}"
-             min="0" required>
-    </div>
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label fw-semibold">Fecha de vencimiento <span class="text-muted">(opcional)</span></label>
-    <input type="date" class="form-control" th:field="*{fechaVencimiento}">
-  </div>
-</th:block>
 
 </body>
 </html>
