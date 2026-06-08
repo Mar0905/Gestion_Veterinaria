@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Dashboard</title></head>
+<body>
+
+<div class="container-fluid">
+
+  <h2 class="fw-bold mb-4">Dashboard de Reportes</h2>
+
+  <!-- ── KPI Cards ──────────────────────────────────────────── -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+            <i class="fi fi-sr-users fs-4 text-primary"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Clientes</p>
+            <h3 class="fw-bold mb-0" th:text="${totalClientes}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-success bg-opacity-10 p-3">
+            <i class="fi fi-sr-paw fs-4 text-success"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Mascotas</p>
+            <h3 class="fw-bold mb-0" th:text="${totalMascotas}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-info bg-opacity-10 p-3">
+            <i class="fi fi-sr-stethoscope fs-4 text-info"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Veterinarios</p>
+            <h3 class="fw-bold mb-0" th:text="${totalVeterinarios}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+            <i class="fi fi-sr-calendar fs-4 text-warning"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Citas programadas</p>
+            <h3 class="fw-bold mb-0" th:text="${citasProgramadas}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-secondary bg-opacity-10 p-3">
+            <i class="fi fi-sr-receipt fs-4 text-secondary"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Comprobantes (mes)</p>
+            <h3 class="fw-bold mb-0" th:text="${comprobantesDelMes}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-success bg-opacity-10 p-3">
+            <i class="fi fi-sr-money fs-4 text-success"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Ingresos (mes)</p>
+            <h3 class="fw-bold mb-0"
+                th:text="'S/ ' + ${#numbers.formatDecimal(ingresosDelMes, 1, 2)}">
+              S/ 0.00
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100"
+           th:classappend="${stockBajo > 0} ? 'border-warning border-2' : ''">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+            <i class="fi fi-sr-box fs-4 text-warning"></i>
+          </div>
+          <div>
+            <p class="text-muted small mb-0">Productos stock bajo</p>
+            <h3 class="fw-bold mb-0"
+                th:classappend="${stockBajo > 0} ? 'text-warning' : ''"
+                th:text="${stockBajo}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Gráficos fila 1 ─────────────────────────────────────── -->
+  <div class="row g-3 mb-3">
+
+    <!-- Citas por estado -->
+    <div class="col-md-6 col-xl-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold bg-white border-bottom">
+          Citas por Estado
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <canvas id="chartCitas" style="max-height:260px"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comprobantes por tipo -->
+    <div class="col-md-6 col-xl-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold bg-white border-bottom">
+          Comprobantes por Tipo
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <canvas id="chartTipos" style="max-height:260px"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mascotas por especie -->
+    <div class="col-md-12 col-xl-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold bg-white border-bottom">
+          Mascotas por Especie
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <canvas id="chartEspecies" style="max-height:260px"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Gráfico ingresos ────────────────────────────────────── -->
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header fw-semibold bg-white border-bottom">
+          Ingresos Últimos 6 Meses (S/)
+        </div>
+        <div class="card-body">
+          <canvas id="chartIngresos" style="max-height:280px"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+// Datos desde el servidor
+var citasLabels   = /*[[${citasLabels}]]*/ [];
+var citasCounts   = /*[[${citasCounts}]]*/ [];
+var ingresosLabels = /*[[${ingresosLabels}]]*/ [];
+var ingresosData   = /*[[${ingresosData}]]*/ [];
+var especiesLabels = /*[[${especiesLabels}]]*/ [];
+var especiesData   = /*[[${especiesData}]]*/ [];
+var tiposLabels    = /*[[${tiposLabels}]]*/ [];
+var tiposData      = /*[[${tiposData}]]*/ [];
+
+// Paleta de colores
+var coloresDoughnut = ['#4361ee','#4cc9f0','#f72585','#7209b7','#3a0ca3','#4895ef'];
+var coloresBar      = ['#4361ee','#4cc9f0','#f72585','#7209b7','#3a0ca3','#4895ef'];
+
+// Gráfico 1: Citas por estado (doughnut)
+new Chart(document.getElementById('chartCitas'), {
+    type: 'doughnut',
+    data: {
+        labels: citasLabels,
+        datasets: [{
+            data: citasCounts,
+            backgroundColor: ['#4361ee','#2dc653','#f72585'],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        plugins: { legend: { position: 'bottom' } },
+        cutout: '60%'
+    }
+});
+
+// Gráfico 2: Comprobantes por tipo (doughnut)
+new Chart(document.getElementById('chartTipos'), {
+    type: 'doughnut',
+    data: {
+        labels: tiposLabels,
+        datasets: [{
+            data: tiposData,
+            backgroundColor: ['#2dc653','#4361ee'],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        plugins: { legend: { position: 'bottom' } },
+        cutout: '60%'
+    }
+});
+
+// Gráfico 3: Mascotas por especie (bar horizontal)
+new Chart(document.getElementById('chartEspecies'), {
+    type: 'bar',
+    data: {
+        labels: especiesLabels,
+        datasets: [{
+            label: 'Mascotas',
+            data: especiesData,
+            backgroundColor: coloresBar,
+            borderRadius: 6
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { precision: 0 } } }
+    }
+});
+
+// Gráfico 4: Ingresos últimos 6 meses (line)
+new Chart(document.getElementById('chartIngresos'), {
+    type: 'line',
+    data: {
+        labels: ingresosLabels,
+        datasets: [{
+            label: 'Ingresos (S/)',
+            data: ingresosData,
+            borderColor: '#4361ee',
+            backgroundColor: 'rgba(67,97,238,0.1)',
+            pointBackgroundColor: '#4361ee',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 5
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(v) { return 'S/ ' + v.toFixed(2); }
+                }
+            }
+        }
+    }
+});
+
+/*]]>*/
+</script>
+
+</body>
+</html>
