@@ -55,6 +55,13 @@
     <i class="fi fi-sr-box me-2"></i>
     Inventario
   </a>
+
+  <a class="nav-link d-flex align-items-center me-3"
+     sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+     th:href="@{/facturacion}">
+    <i class="fi fi-sr-receipt me-2"></i>
+    Facturación
+  </a>
   <hr>
 
 

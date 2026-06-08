@@ -42,8 +42,8 @@ public class HttpSecurityConfig {
                     auth.requestMatchers("/veterinario/**")
                             .hasRole("VETERINARIO");
 
-                    // RECEPCION puede gestionar citas
-                    auth.requestMatchers("/citas/**")
+                    // RECEPCION puede gestionar citas y facturación
+                    auth.requestMatchers("/citas/**", "/facturacion/**")
                             .hasAnyRole("ADMIN", "RECEPCION");
 
                     // Todo lo demás requiere login
