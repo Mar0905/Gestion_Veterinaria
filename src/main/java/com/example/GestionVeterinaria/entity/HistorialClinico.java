@@ -1,20 +1,13 @@
 package com.example.GestionVeterinaria.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Historial Clinico")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "Historial_Clinico")
 public class HistorialClinico {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,18 +15,15 @@ public class HistorialClinico {
     @Column(name = "fecha_Consulta")
     private LocalDate fechaConsulta;
 
-    @Column (length = 200)
+    @Column(length = 200)
     private String diagnostico;
 
-
-    @Column (length = 200)
+    @Column(length = 200)
     private String tratamiento;
 
-
-    @Column (length = 200)
+    @Column(length = 200)
     private String observaciones;
 
-    //Clave de 1 a uno
     @ManyToOne
     @JoinColumn(name = "mascota_id", nullable = false)
     private Mascota mascota;
@@ -42,4 +32,38 @@ public class HistorialClinico {
     @JoinColumn(name = "cita_id", nullable = false, unique = true)
     private Cita cita;
 
+    public HistorialClinico() {}
+
+    public HistorialClinico(Long id, LocalDate fechaConsulta, String diagnostico,
+                            String tratamiento, String observaciones,
+                            Mascota mascota, Cita cita) {
+        this.id = id;
+        this.fechaConsulta = fechaConsulta;
+        this.diagnostico = diagnostico;
+        this.tratamiento = tratamiento;
+        this.observaciones = observaciones;
+        this.mascota = mascota;
+        this.cita = cita;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public LocalDate getFechaConsulta() { return fechaConsulta; }
+    public void setFechaConsulta(LocalDate fechaConsulta) { this.fechaConsulta = fechaConsulta; }
+
+    public String getDiagnostico() { return diagnostico; }
+    public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
+
+    public String getTratamiento() { return tratamiento; }
+    public void setTratamiento(String tratamiento) { this.tratamiento = tratamiento; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    public Mascota getMascota() { return mascota; }
+    public void setMascota(Mascota mascota) { this.mascota = mascota; }
+
+    public Cita getCita() { return cita; }
+    public void setCita(Cita cita) { this.cita = cita; }
 }
