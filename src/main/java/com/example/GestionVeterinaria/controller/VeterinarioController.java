@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.time.LocalDate;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("veterinarios")
@@ -64,10 +66,32 @@ public class VeterinarioController
 
         // 🔥 SOLO citas programadas
         List<Cita> citas = citaRepository
-                .findByVeterinarioIdAndEstado(veterinarioId, "Programada");
+                .findByVeterinarioIdAndEstado(veterinarioId, "Programada").stream()
+                .sorted(Comparator.comparing(Cita::getFechaCita).thenComparing(Cita::getHoraCita))
+                .toList();
 
         model.addAttribute("citas", citas);
         model.addAttribute("contenido", "veterinario/agenda");
+        return "layout/base";
+    }
+
+    @GetMapping("/panel")
+    public String panelVeterinario(Model model, Authentication authentication) {
+        Usuarios usuario = usuarioRepository.findByUsername(authentication.getName()).orElseThrow();
+        Veterinario veterinario = usuario.getVeterinario();
+        if (veterinario == null) throw new IllegalStateException("El usuario no tiene un veterinario asociado");
+
+        List<Cita> pendientes = citaRepository.findByVeterinarioIdAndEstado(veterinario.getId(), "Programada");
+        List<Cita> citasHoy = pendientes.stream()
+                .filter(c -> LocalDate.now().equals(c.getFechaCita()))
+                .sorted(Comparator.comparing(Cita::getHoraCita)).toList();
+        long atendidas = citaRepository.findByVeterinarioIdAndEstado(veterinario.getId(), "COMPLETADA").size();
+
+        model.addAttribute("veterinario", veterinario);
+        model.addAttribute("citasHoy", citasHoy);
+        model.addAttribute("pendientes", pendientes.size());
+        model.addAttribute("atendidas", atendidas);
+        model.addAttribute("contenido", "veterinario/panel");
         return "layout/base";
     }
 

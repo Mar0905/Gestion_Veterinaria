@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -78,13 +79,36 @@ public class ReporteService {
         return productoRepository.findStockBajo().size();
     }
 
+    public List<Comprobante> getComprobantes(LocalDate desde, LocalDate hasta) {
+        LocalDateTime inicio = desde.atStartOfDay();
+        LocalDateTime fin = hasta.atTime(23, 59, 59);
+        return comprobanteRepository.findAll().stream()
+                .filter(c -> c.getFecha() != null && !c.getFecha().isBefore(inicio) && !c.getFecha().isAfter(fin))
+                .sorted(Comparator.comparing(Comprobante::getFecha).reversed())
+                .toList();
+    }
+
+    public BigDecimal getIngresos(List<Comprobante> comprobantes) {
+        return comprobantes.stream().map(Comprobante::getTotal)
+                .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
     // ── Datos para gráficos ─────────────────────────────────────────────────
 
     public Map<String, Long> getCitasPorEstado() {
+        return getCitasPorEstado(null, null);
+    }
+
+    public Map<String, Long> getCitasPorEstado(LocalDate desde, LocalDate hasta) {
+        var citas = citaRepository.findAll().stream()
+                .filter(c -> desde == null || !c.getFechaCita().isBefore(desde))
+                .filter(c -> hasta == null || !c.getFechaCita().isAfter(hasta))
+                .toList();
         Map<String, Long> map = new LinkedHashMap<>();
-        map.put("Programada", (long) citaRepository.findByEstado("Programada").size());
-        map.put("Atendida",   (long) citaRepository.findByEstado("Atendida").size());
-        map.put("Cancelada",  (long) citaRepository.findByEstado("Cancelada").size());
+        map.put("Programada", citas.stream().filter(c -> "Programada".equalsIgnoreCase(c.getEstado())).count());
+        map.put("Atendidas", citas.stream().filter(c -> "COMPLETADA".equalsIgnoreCase(c.getEstado())).count());
+        map.put("Cancelada", citas.stream().filter(c -> "Cancelada".equalsIgnoreCase(c.getEstado())).count());
         return map;
     }
 
@@ -114,6 +138,24 @@ public class ReporteService {
         return totales;
     }
 
+    public Map<String, Double> getIngresosPorPeriodo(List<Comprobante> comprobantes, LocalDate desde, LocalDate hasta) {
+        boolean diario = !desde.plusDays(45).isBefore(hasta);
+        DateTimeFormatter formato = diario
+                ? DateTimeFormatter.ofPattern("dd MMM", Locale.of("es", "PE"))
+                : DateTimeFormatter.ofPattern("MMM yyyy", Locale.of("es", "PE"));
+        Map<String, Double> resultado = new LinkedHashMap<>();
+        for (LocalDate fecha = desde; !fecha.isAfter(hasta); fecha = diario ? fecha.plusDays(1) : fecha.withDayOfMonth(1).plusMonths(1)) {
+            LocalDate inicio = diario ? fecha : fecha.withDayOfMonth(1);
+            LocalDate fin = diario ? fecha : fecha.withDayOfMonth(fecha.lengthOfMonth());
+            double total = comprobantes.stream()
+                    .filter(c -> !c.getFecha().toLocalDate().isBefore(inicio) && !c.getFecha().toLocalDate().isAfter(fin))
+                    .map(Comprobante::getTotal).filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add).doubleValue();
+            resultado.put(inicio.format(formato), total);
+        }
+        return resultado;
+    }
+
     public Map<String, Long> getMascotasPorEspecie() {
         return mascotaRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
@@ -124,9 +166,13 @@ public class ReporteService {
     }
 
     public Map<String, Long> getComprobantesPorTipo() {
+        return getComprobantesPorTipo(comprobanteRepository.findAll());
+    }
+
+    public Map<String, Long> getComprobantesPorTipo(List<Comprobante> comprobantes) {
         Map<String, Long> map = new LinkedHashMap<>();
-        map.put("BOLETA",  (long) comprobanteRepository.findByTipo("BOLETA").size());
-        map.put("FACTURA", (long) comprobanteRepository.findByTipo("FACTURA").size());
+        map.put("BOLETA", comprobantes.stream().filter(c -> "BOLETA".equalsIgnoreCase(c.getTipo())).count());
+        map.put("FACTURA", comprobantes.stream().filter(c -> "FACTURA".equalsIgnoreCase(c.getTipo())).count());
         return map;
     }
 }

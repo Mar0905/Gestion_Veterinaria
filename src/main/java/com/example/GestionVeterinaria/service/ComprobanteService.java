@@ -68,7 +68,13 @@ public class ComprobanteService {
             if (desc.isEmpty()) continue;
 
             int cant = Integer.parseInt(cantidades[i]);
+            if (cant <= 0) {
+                throw new IllegalArgumentException("La cantidad de cada detalle debe ser mayor que cero");
+            }
             BigDecimal precioU = new BigDecimal(precios[i]).setScale(2, RoundingMode.HALF_UP);
+            if (precioU.signum() < 0) {
+                throw new IllegalArgumentException("El precio no puede ser negativo");
+            }
             BigDecimal subtDet = precioU.multiply(BigDecimal.valueOf(cant)).setScale(2, RoundingMode.HALF_UP);
 
             DetalleComprobante det = new DetalleComprobante();
@@ -81,7 +87,14 @@ public class ComprobanteService {
             if (productoIds != null && i < productoIds.length
                     && productoIds[i] != null && !productoIds[i].isEmpty()) {
                 Long prodId = Long.parseLong(productoIds[i]);
-                productoRepository.findById(prodId).ifPresent(det::setProducto);
+                Producto producto = productoRepository.findById(prodId)
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                if (producto.getStock() < cant) {
+                    throw new IllegalStateException("Stock insuficiente para " + producto.getNombre());
+                }
+                producto.setStock(producto.getStock() - cant);
+                productoRepository.save(producto);
+                det.setProducto(producto);
             }
 
             subtotalTotal = subtotalTotal.add(subtDet);
@@ -103,7 +116,16 @@ public class ComprobanteService {
         return comprobanteRepository.save(comp);
     }
 
+    @Transactional
     public void eliminar(Long id) {
-        comprobanteRepository.deleteById(id);
+        Comprobante comprobante = buscarPorId(id);
+        for (DetalleComprobante detalle : comprobante.getDetalles()) {
+            if (detalle.getProducto() != null) {
+                Producto producto = detalle.getProducto();
+                producto.setStock(producto.getStock() + detalle.getCantidad());
+                productoRepository.save(producto);
+            }
+        }
+        comprobanteRepository.delete(comprobante);
     }
 }

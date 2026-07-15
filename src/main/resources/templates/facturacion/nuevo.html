@@ -88,7 +88,7 @@
                 <tr>
                   <th style="width:22%">Producto (opcional)</th>
                   <th>Descripción</th>
-                  <th style="width:7%">Cant.</th>
+                  <th style="width:12%;min-width:100px">Cantidad</th>
                   <th style="width:12%">Precio U. (S/)</th>
                   <th style="width:10%">Subtotal</th>
                   <th style="width:4%"></th>
@@ -104,7 +104,9 @@
                               th:value="${p.id}"
                               th:text="${p.nombre}"
                               th:data-precio="${p.precio}"
-                              th:data-nombre="${p.nombre}">
+                              th:data-nombre="${p.nombre}"
+                              th:data-stock="${p.stock}"
+                              th:disabled="${p.stock <= 0}">
                       </option>
                     </select>
                   </td>
@@ -115,6 +117,7 @@
                   <td>
                     <input type="number" class="form-control form-control-sm cant-input"
                            name="cantidad" min="1" value="1" required
+                           aria-label="Cantidad" style="min-width:80px"
                            oninput="calcularFila(this.closest('tr'));calcularTotales()">
                   </td>
                   <td>
@@ -244,9 +247,14 @@ function onProductoChange(select) {
   if (opt.value) {
     row.querySelector('.desc-input').value = opt.getAttribute('data-nombre') || opt.text;
     row.querySelector('.precio-input').value = opt.getAttribute('data-precio') || '0.00';
+    var stock = parseInt(opt.getAttribute('data-stock'), 10) || 0;
+    var cantidad = row.querySelector('.cant-input');
+    cantidad.max = stock;
+    if (parseInt(cantidad.value, 10) > stock) cantidad.value = stock;
   } else {
     row.querySelector('.desc-input').value = '';
     row.querySelector('.precio-input').value = '0.00';
+    row.querySelector('.cant-input').removeAttribute('max');
   }
   calcularFila(row);
   calcularTotales();

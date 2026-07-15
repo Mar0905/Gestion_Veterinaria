@@ -63,11 +63,19 @@ public class ProductoService {
     }
 
     public void registrarMovimiento(Long productoId, String tipo, Integer cantidad) {
+        if (cantidad == null || cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero");
+        }
         Producto p = buscarPorId(productoId);
         if ("entrada".equals(tipo)) {
             p.setStock(p.getStock() + cantidad);
         } else if ("salida".equals(tipo)) {
-            p.setStock(Math.max(0, p.getStock() - cantidad));
+            if (cantidad > p.getStock()) {
+                throw new IllegalArgumentException("Stock insuficiente para registrar la salida de " + p.getNombre());
+            }
+            p.setStock(p.getStock() - cantidad);
+        } else {
+            throw new IllegalArgumentException("Tipo de movimiento no válido");
         }
         productoRepository.save(p);
     }

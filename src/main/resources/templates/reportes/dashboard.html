@@ -13,6 +13,26 @@
     </div>
   </div>
 
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" th:action="@{/reportes}" class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Desde</label>
+          <input type="date" name="desde" class="form-control" th:value="${desde}" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Hasta</label>
+          <input type="date" name="hasta" class="form-control" th:value="${hasta}" required>
+        </div>
+        <div class="col-md-4 d-flex gap-2 flex-wrap">
+          <button type="submit" class="btn btn-primary">Aplicar filtros</button>
+          <a th:href="@{/reportes/excel(desde=${desde},hasta=${hasta})}" class="btn btn-outline-success">Excel</a>
+          <a th:href="@{/reportes/pdf(desde=${desde},hasta=${hasta})}" class="btn btn-outline-danger">PDF</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ── KPI Cards ────────────────────────────────────────────── -->
   <div class="row g-3 mb-4">
 
@@ -105,7 +125,7 @@
   <div class="row g-3">
     <div class="col-12">
       <div class="card">
-        <div class="card-header card-header-purple">Ingresos Últimos 6 Meses (S/)</div>
+        <div class="card-header card-header-purple">Ingresos del periodo (S/)</div>
         <div class="card-body">
           <canvas id="chartIngresos" style="max-height:280px"></canvas>
         </div>

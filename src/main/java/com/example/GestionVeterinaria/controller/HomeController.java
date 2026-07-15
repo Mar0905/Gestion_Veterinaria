@@ -103,4 +103,26 @@ public class HomeController {
         model.addAttribute("contenido", "mascotas/todas");
         return "layout/base";
     }
+
+    @GetMapping("/recepcion")
+    public String panelRecepcion(Model model) {
+        LocalDate hoy = LocalDate.now();
+        List<Cita> citasHoy = citaRepository.findByFechaCita(hoy);
+        List<Cita> proximasCitas = citaRepository.findByEstado("Programada").stream()
+                .filter(c -> !c.getFechaCita().isBefore(hoy))
+                .sorted(Comparator.comparing(Cita::getFechaCita).thenComparing(Cita::getHoraCita))
+                .limit(5).collect(Collectors.toList());
+        BigDecimal ingresosHoy = comprobanteRepository.findAll().stream()
+                .filter(c -> c.getFecha() != null && c.getFecha().toLocalDate().equals(hoy))
+                .map(Comprobante::getTotal).filter(t -> t != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        model.addAttribute("citasHoy", citasHoy.size());
+        model.addAttribute("clientes", clienteRepository.count());
+        model.addAttribute("ingresosHoy", ingresosHoy);
+        model.addAttribute("proximasCitas", proximasCitas);
+        model.addAttribute("alertasStock", productoRepository.findStockBajo().stream().limit(4).toList());
+        model.addAttribute("contenido", "recepcion/panel");
+        return "layout/base";
+    }
 }

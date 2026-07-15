@@ -7,6 +7,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,16 @@ public class HttpSecurityConfig {
                             .permitAll();
 
                     // ADMIN
-                    auth.requestMatchers("/admin/**", "/inventario/**", "/reportes/**")
+                    auth.requestMatchers("/admin/**", "/reportes/**")
+                            .hasRole("ADMIN");
+
+                    auth.requestMatchers("/recepcion/**")
+                            .hasRole("RECEPCION");
+
+                    // Inventario: recepción consulta disponibilidad; solo administración lo modifica.
+                    auth.requestMatchers(HttpMethod.GET, "/inventario")
+                            .hasAnyRole("ADMIN", "RECEPCION");
+                    auth.requestMatchers("/inventario/**")
                             .hasRole("ADMIN");
 
                     // VETERINARIO
@@ -49,6 +59,8 @@ public class HttpSecurityConfig {
                             .hasAnyRole("ADMIN", "VETERINARIO", "RECEPCION");
 
                     // RECEPCION puede gestionar citas y facturación
+                    auth.requestMatchers(HttpMethod.POST, "/facturacion/*/eliminar")
+                            .hasRole("ADMIN");
                     auth.requestMatchers("/citas/**", "/facturacion/**")
                             .hasAnyRole("ADMIN", "RECEPCION");
 
