@@ -17,6 +17,7 @@ public class InventarioController {
         this.productoService = productoService;
     }
 
+    // Lista los productos de inventario con alertas de stock y vencimiento
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("productos", productoService.listarTodos());
@@ -28,6 +29,7 @@ public class InventarioController {
         return "layout/base";
     }
 
+    // Registra una entrada o salida de stock para un producto
     @PostMapping("/movimiento")
     public String registrarMovimiento(@RequestParam Long productoId,
                                       @RequestParam String tipo,
@@ -42,6 +44,7 @@ public class InventarioController {
         return "redirect:/inventario";
     }
 
+    // Muestra el formulario para registrar un nuevo producto
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("producto", new Producto());
@@ -49,12 +52,14 @@ public class InventarioController {
         return "layout/base";
     }
 
+    // Registra un nuevo producto en el inventario
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Producto producto) {
         productoService.guardar(producto);
         return "redirect:/inventario";
     }
 
+    // Muestra el formulario de edición de un producto existente
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("producto", productoService.buscarPorId(id));
@@ -62,12 +67,14 @@ public class InventarioController {
         return "layout/base";
     }
 
+    // Actualiza los datos de un producto existente
     @PostMapping("/{id}/actualizar")
     public String actualizar(@PathVariable Long id, @ModelAttribute Producto producto) {
         productoService.actualizar(id, producto);
         return "redirect:/inventario";
     }
 
+    // Elimina un producto del inventario
     @PostMapping("/{id}/eliminar")
     public String eliminar(@PathVariable Long id) {
         productoService.eliminar(id);

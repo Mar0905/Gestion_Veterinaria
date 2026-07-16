@@ -31,6 +31,7 @@ public class HistorialController {
         this.usuarioRepository = usuarioRepository;
     }
 
+    // Lista el historial clínico, filtrado por veterinario si aplica
     @GetMapping
     public String listarHistorial(Model model, Authentication authentication) {
         List<HistorialClinico> historiales = historialRepository.findAll();
@@ -46,6 +47,7 @@ public class HistorialController {
         return "layout/base";
     }
 
+    // Muestra el formulario para registrar la atención de una cita
     @GetMapping("/crear/{id}")
     public String mostrarFormulario(@PathVariable Long id, Model model, Authentication authentication) {
         Cita cita = citaRepository.findById(id)
@@ -65,6 +67,7 @@ public class HistorialController {
         return "layout/base";
     }
 
+    // Registra el historial clínico de una cita y la marca como completada
     @PostMapping("/guardar")
     public String guardarHistorial(@ModelAttribute HistorialClinico historial,
                                    @RequestParam Long citaId,

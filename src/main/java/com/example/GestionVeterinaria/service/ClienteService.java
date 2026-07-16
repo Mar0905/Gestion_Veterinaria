@@ -18,18 +18,19 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    //listar clientes
+    // Lista todos los clientes registrados
     public List<Cliente> listarTodos(){
         return clienteRepository.findAll();
     }
 
-    //Buscar cliente por id
+    // Busca un cliente por id
     public Cliente devolverCliente_id(Long id) {
         return clienteRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
 
 
+    // Registra un nuevo cliente y valida DNI duplicado
     public Cliente registrar(Cliente cliente){
 
         if(clienteRepository.existsByDni(cliente.getDni())){
@@ -41,6 +42,7 @@ public class ClienteService {
 
     }
 
+    // Actualiza los datos de un cliente existente
     public Cliente actualizar(Long id, Cliente datos) {
         Cliente existente = devolverCliente_id(id);
         existente.setNombre(datos.getNombre());
@@ -51,7 +53,7 @@ public class ClienteService {
         return clienteRepository.save(existente);
     }
 
-    //Eliminar cliente
+    // Elimina un cliente por id
     public void eliminar(Long id){
         Cliente cliente =devolverCliente_id(id);
         clienteRepository.delete(cliente);

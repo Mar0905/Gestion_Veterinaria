@@ -24,6 +24,7 @@ public class FacturacionController {
         this.productoService = productoService;
     }
 
+    // Lista todos los comprobantes emitidos
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("comprobantes", comprobanteService.listarTodos());
@@ -31,6 +32,7 @@ public class FacturacionController {
         return "layout/base";
     }
 
+    // Muestra el formulario para emitir un nuevo comprobante
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("clientes", clienteService.listarTodos());
@@ -39,6 +41,7 @@ public class FacturacionController {
         return "layout/base";
     }
 
+    // Emite un nuevo comprobante con sus detalles y actualiza el stock de productos
     @PostMapping("/guardar")
     public String guardar(
             @RequestParam Long clienteId,
@@ -60,6 +63,7 @@ public class FacturacionController {
         }
     }
 
+    // Muestra el detalle de un comprobante
     @GetMapping("/{id}")
     public String ver(@PathVariable Long id, Model model) {
         model.addAttribute("comprobante", comprobanteService.buscarPorId(id));
@@ -67,6 +71,7 @@ public class FacturacionController {
         return "layout/base";
     }
 
+    // Elimina un comprobante y repone el stock de sus productos
     @PostMapping("/{id}/eliminar")
     public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
         comprobanteService.eliminar(id);

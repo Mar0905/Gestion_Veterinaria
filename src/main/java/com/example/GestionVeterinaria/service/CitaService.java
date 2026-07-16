@@ -29,6 +29,7 @@ public class CitaService {
     }
 
 
+    // Registra una nueva cita validando cruce de horario y máximo de citas diarias por veterinario
     public Cita registrarCita(Cita cita, Long id_Mascota, Long id_Veterinario) {
 
         Mascota mascota = mascotaRepository.findById(id_Mascota)
@@ -64,21 +65,26 @@ public class CitaService {
         return citaRepository.save(cita);
     }
 
+    // Lista todas las citas registradas
     public List<Cita> listarTodo(){
         return citaRepository.findAll();
     }
+    // Lista las citas de una mascota
     public List<Cita> listarPorMascota(Long id_mascota){
         return citaRepository.findByMascotaId(id_mascota);
     }
 
+    // Lista las citas de un veterinario
     public List<Cita> listarPorVeterinario (Long id_veterinario){
         return  citaRepository.findByVeterinario(id_veterinario);
     }
 
+    // Lista las citas programadas en una fecha
     public List<Cita> listarPorFecha (LocalDate fecha_cita){
         return citaRepository.findByFechaCita(fecha_cita);
     }
 
+    // Cambia el estado de una cita existente
     public void cambiarEstadoCita (Long cita_id , String estado){
         Cita cita1 = citaRepository.findById(cita_id).
                 orElseThrow(()->new RuntimeException("No se encontró cita"));
@@ -87,6 +93,7 @@ public class CitaService {
         //Guardamos
         citaRepository.save(cita1);
     }
+    // Guarda una cita validando máximo de citas diarias y cruce de horario del veterinario
     public void guardarCita(Cita cita) {
 
         long citasDelDia = citaRepository
@@ -114,6 +121,7 @@ public class CitaService {
         citaRepository.save(cita);
     }
 
+    // Elimina una cita por id
     public  void eliminarCita(Long idCita){
         citaRepository.deleteById(idCita);
     }

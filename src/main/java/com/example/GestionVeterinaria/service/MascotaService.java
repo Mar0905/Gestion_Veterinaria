@@ -33,6 +33,7 @@ public class MascotaService {
         return mascotaRepository.findByCliente_id(clienteId);
     }
 
+   // Busca una mascota por id
    public Mascota buscarPorId(Long id){
      return mascotaRepository.findById(id).orElseThrow(()->
              new RuntimeException("Mascota no encontrada"));
@@ -48,6 +49,7 @@ public class MascotaService {
     }
 
 
+    // Actualiza los datos de una mascota existente
     public Mascota actualizar(Long id, Mascota datos) {
         Mascota existente = buscarPorId(id);
         existente.setNombre(datos.getNombre());

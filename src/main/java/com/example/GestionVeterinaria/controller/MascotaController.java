@@ -20,6 +20,7 @@ public class MascotaController {
         this.clienteService = clienteService;
     }
 
+    // Lista las mascotas de un cliente
     @GetMapping
     public String listarMascotas(@PathVariable Long clienteId, Model model) {
         model.addAttribute("cliente", clienteService.devolverCliente_id(clienteId));
@@ -28,6 +29,7 @@ public class MascotaController {
         return "layout/base";
     }
 
+    // Muestra el formulario para registrar una nueva mascota
     @GetMapping("/nueva")
     public String nueva(@PathVariable Long clienteId, Model model) {
         model.addAttribute("mascota", new Mascota());
@@ -36,6 +38,7 @@ public class MascotaController {
         return "layout/base";
     }
 
+    // Registra una nueva mascota asociada a un cliente
     @PostMapping("/guardar")
     public String guardar(@PathVariable Long clienteId,
                            @ModelAttribute Mascota mascota,
@@ -45,6 +48,7 @@ public class MascotaController {
         return "redirect:/clientes/" + clienteId + "/mascotas";
     }
 
+    // Muestra el formulario de edición de una mascota existente
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long clienteId,
                           @PathVariable Long id,
@@ -55,6 +59,7 @@ public class MascotaController {
         return "layout/base";
     }
 
+    // Actualiza los datos de una mascota existente
     @PostMapping("/{id}/actualizar")
     public String actualizar(@PathVariable Long clienteId,
                               @PathVariable Long id,
@@ -65,6 +70,7 @@ public class MascotaController {
         return "redirect:/clientes/" + clienteId + "/mascotas";
     }
 
+    // Elimina una mascota por id
     @PostMapping("/{id}/eliminar")
     public String eliminar(@PathVariable Long clienteId,
                             @PathVariable Long id,

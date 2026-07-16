@@ -39,11 +39,13 @@ public class HomeController {
         this.comprobanteRepository = comprobanteRepository;
     }
 
+    // Muestra la página de inicio de sesión
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
+    // Muestra el dashboard principal con KPIs, próximas citas y alertas
     @GetMapping("/")
     public String home(Model model) {
         LocalDate hoy = LocalDate.now();
@@ -97,6 +99,7 @@ public class HomeController {
         return "layout/base";
     }
 
+    // Lista todas las mascotas registradas en el sistema
     @GetMapping("/mascotas")
     public String todasMascotas(Model model) {
         model.addAttribute("mascotas", mascotaRepository.findAll());
@@ -104,6 +107,7 @@ public class HomeController {
         return "layout/base";
     }
 
+    // Muestra el panel de recepción con citas del día e ingresos
     @GetMapping("/recepcion")
     public String panelRecepcion(Model model) {
         LocalDate hoy = LocalDate.now();

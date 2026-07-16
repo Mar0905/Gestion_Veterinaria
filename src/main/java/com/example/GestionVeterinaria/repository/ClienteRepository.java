@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
-    //buscar cliente por id
+    // Busca un cliente por DNI
     Cliente findByDni(String dni);
 
-    //Verificar si existe el dni
+    // Verifica si existe un cliente con ese DNI
     boolean existsByDni(String dni);
 
 

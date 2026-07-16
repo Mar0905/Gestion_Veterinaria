@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface HistorialClinicoRepository extends JpaRepository<HistorialClinico, Long> {
+    // Busca el historial clínico de una mascota
     List<HistorialClinico> findByMascotaId(Long id_mascota);
 
 }

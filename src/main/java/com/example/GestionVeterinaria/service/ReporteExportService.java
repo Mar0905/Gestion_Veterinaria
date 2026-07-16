@@ -29,6 +29,7 @@ public class ReporteExportService {
 
     private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    // Genera un archivo Excel con el reporte de facturación del periodo indicado
     public byte[] crearExcel(List<Comprobante> comprobantes, LocalDate desde, LocalDate hasta) {
         try (XSSFWorkbook libro = new XSSFWorkbook(); ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
             var hoja = libro.createSheet("Facturación");
@@ -76,6 +77,7 @@ public class ReporteExportService {
         }
     }
 
+    // Genera un archivo PDF con el reporte de facturación del periodo indicado
     public byte[] crearPdf(List<Comprobante> comprobantes, LocalDate desde, LocalDate hasta) {
         ByteArrayOutputStream salida = new ByteArrayOutputStream();
         Document documento = new Document(PageSize.A4.rotate(), 30, 30, 30, 30);

@@ -27,6 +27,7 @@ public class CitaControlador {
 
     }
 
+    // Lista todas las citas registradas
     @GetMapping
     public String listarCitas(Model model){
         model.addAttribute("contenido","citas/listar");
@@ -34,6 +35,7 @@ public class CitaControlador {
         return "layout/base";
     }
 
+    // Muestra el formulario para registrar una nueva cita
     @GetMapping("/nueva")
     public String nuevaCita(Model model){
         model.addAttribute("contenido","citas/formulario");
@@ -43,6 +45,7 @@ public class CitaControlador {
         return "layout/base";
     }
 
+    // Registra una nueva cita para una mascota y un veterinario
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Cita cita,
                           @RequestParam Long mascotaId,
@@ -60,6 +63,7 @@ public class CitaControlador {
 
     }
 
+    // Elimina una cita por id
     @PostMapping("/eliminar/{id}")
     public String eliminarCita(@PathVariable Long id){
         citaService.eliminarCita(id);
