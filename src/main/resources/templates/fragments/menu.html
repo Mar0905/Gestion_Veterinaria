@@ -142,10 +142,13 @@
       </div>
     </div>
 
-    <a th:href="@{/logout}" class="sb-logout">
+    <form th:action="@{/logout}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <button type="submit" class="sb-logout">
       <i class="fi fi-sr-sign-out-alt"></i>
       Cerrar Sesión
-    </a>
+      </button>
+    </form>
 
   </div>
 
