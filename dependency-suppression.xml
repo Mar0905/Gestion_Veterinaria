@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes>Falso positivo: CVE-2022-31691 corresponde a Spring Tools
+        (plugin YAML de Eclipse/VSCode), no a spring-boot-devtools.
+        Verificado en https://spring.io/security/cve-2022-31691/</notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.boot/spring\-boot\-devtools@.*$</packageUrl>
+        <cve>CVE-2022-31691</cve>
+    </suppress>
+</suppressions>
