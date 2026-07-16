@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head><meta charset="UTF-8"><title>Facturación</title></head>
 <body>
 
@@ -83,7 +84,8 @@
                  class="btn btn-sm btn-outline-secondary me-1" title="Ver detalle">
                 <i class="fi fi-sr-eye"></i>
               </a>
-              <form th:action="@{/facturacion/{id}/eliminar(id=${c.id})}"
+              <form sec:authorize="hasRole('ADMIN')"
+                    th:action="@{/facturacion/{id}/eliminar(id=${c.id})}"
                     method="post" class="d-inline"
                     onsubmit="return confirm('¿Eliminar este comprobante?')">
                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">

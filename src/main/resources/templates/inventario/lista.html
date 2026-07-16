@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head><meta charset="UTF-8"><title>Inventario</title></head>
 <body>
 
@@ -11,7 +12,7 @@
       <h2 class="page-title">Inventario</h2>
       <p class="page-subtitle">Control de productos y stock</p>
     </div>
-    <div class="page-hdr-btn">
+    <div class="page-hdr-btn" sec:authorize="hasRole('ADMIN')">
       <a th:href="@{/inventario/nuevo}" class="btn btn-primary">
         <i class="fi fi-sr-plus"></i> Nuevo Producto
       </a>
@@ -19,6 +20,11 @@
   </div>
 
   <div class="row g-3">
+
+    <div class="col-12" th:if="${exito != null or error != null}">
+      <div th:if="${exito}" class="alert alert-success mb-0" th:text="${exito}"></div>
+      <div th:if="${error}" class="alert alert-danger mb-0" th:text="${error}"></div>
+    </div>
 
     <!-- ── Left: tabla de productos ─────────────────────────── -->
     <div class="col-lg-8">
@@ -81,6 +87,7 @@
                   <span th:if="${p.fechaVencimiento == null}" class="text-muted">—</span>
                 </td>
                 <td class="text-center text-nowrap">
+                  <span sec:authorize="hasRole('ADMIN')">
                   <a th:href="@{/inventario/{id}/editar(id=${p.id})}"
                      class="btn btn-sm btn-outline-primary me-1" title="Editar">
                     <i class="fi fi-sr-edit"></i>
@@ -92,6 +99,7 @@
                       <i class="fi fi-sr-trash"></i>
                     </button>
                   </form>
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -145,7 +153,7 @@
       </div>
 
       <!-- Registrar movimiento -->
-      <div class="card">
+      <div class="card" sec:authorize="hasRole('ADMIN')">
         <div class="card-header card-header-green">
           <i class="fi fi-sr-box me-1"></i> Registrar movimiento
         </div>

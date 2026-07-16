@@ -8,7 +8,10 @@
   <div class="page-hdr mb-4">
     <div class="page-hdr-left">
       <h2 class="page-title">Historial Clínico</h2>
-      <p class="page-subtitle">Registros médicos de todas las mascotas</p>
+      <p class="page-subtitle"
+         th:text="${vistaVeterinario} ? 'Registros médicos de tus atenciones' : 'Registros médicos de todas las mascotas'">
+        Registros médicos de todas las mascotas
+      </p>
     </div>
   </div>
 

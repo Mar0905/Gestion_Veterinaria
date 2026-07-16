@@ -5,6 +5,7 @@ import com.example.GestionVeterinaria.service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/inventario")
@@ -30,8 +31,14 @@ public class InventarioController {
     @PostMapping("/movimiento")
     public String registrarMovimiento(@RequestParam Long productoId,
                                       @RequestParam String tipo,
-                                      @RequestParam Integer cantidad) {
-        productoService.registrarMovimiento(productoId, tipo, cantidad);
+                                      @RequestParam Integer cantidad,
+                                      RedirectAttributes ra) {
+        try {
+            productoService.registrarMovimiento(productoId, tipo, cantidad);
+            ra.addFlashAttribute("exito", "Movimiento registrado correctamente");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/inventario";
     }
 

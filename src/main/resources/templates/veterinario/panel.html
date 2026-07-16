@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Mi panel clínico</title></head>
+<body>
+<div class="container-fluid">
+  <div class="page-hdr mb-4">
+    <div class="page-hdr-left">
+      <p class="page-module">Veterinario</p>
+      <h2 class="page-title" th:text="'Hola, Dr(a). ' + ${veterinario.nombre}">Mi panel clínico</h2>
+      <p class="page-subtitle">Organiza tus consultas y registra cada atención.</p>
+    </div>
+    <div class="page-hdr-btn"><a th:href="@{/veterinarios/agenda}" class="btn btn-primary"><i class="fi fi-sr-calendar-check me-1"></i> Ver mi agenda</a></div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4"><div class="kpi-card kpi-blue"><span class="kpi-value" th:text="${citasHoy.size()}">0</span><span class="kpi-label">Consultas hoy</span></div></div>
+    <div class="col-6 col-lg-4"><div class="kpi-card kpi-orange"><span class="kpi-value" th:text="${pendientes}">0</span><span class="kpi-label">Pendientes por atender</span></div></div>
+    <div class="col-12 col-lg-4"><div class="kpi-card kpi-green"><span class="kpi-value" th:text="${atendidas}">0</span><span class="kpi-label">Consultas realizadas</span></div></div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-6"><a class="card card-accion h-100" th:href="@{/veterinarios/agenda}"><div class="card-body d-flex align-items-center gap-3"><i class="fi fi-sr-stethoscope fs-3 text-primary"></i><div><h6 class="mb-1">Atender consulta</h6><small class="text-muted">Registra diagnóstico, tratamiento y observaciones.</small></div></div></a></div>
+    <div class="col-md-6"><a class="card card-accion h-100" th:href="@{/historial}"><div class="card-body d-flex align-items-center gap-3"><i class="fi fi-sr-clipboard-list fs-3 text-success"></i><div><h6 class="mb-1">Mis historiales</h6><small class="text-muted">Consulta tus registros clínicos anteriores.</small></div></div></a></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header card-header-blue">Agenda de hoy</div>
+    <div class="card-body p-0">
+      <div th:if="${#lists.isEmpty(citasHoy)}" class="text-center text-muted py-5"><i class="fi fi-sr-calendar fs-2 d-block mb-2 opacity-50"></i>No tienes consultas programadas para hoy.</div>
+      <table th:if="${!#lists.isEmpty(citasHoy)}" class="table table-hover mb-0">
+        <thead><tr><th>Hora</th><th>Mascota</th><th>Especie</th><th>Motivo</th><th class="text-center">Acción</th></tr></thead>
+        <tbody><tr th:each="cita : ${citasHoy}"><td class="fw-semibold" th:text="${cita.horaCita}"></td><td th:text="${cita.mascota.nombre}"></td><td><span class="badge badge-pendiente" th:text="${cita.mascota.especie}"></span></td><td th:text="${cita.motivo ?: 'Sin motivo registrado'}"></td><td class="text-center"><a th:href="@{/historial/crear/{id}(id=${cita.id})}" class="btn btn-sm btn-primary">Atender</a></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -22,10 +22,17 @@
 
     <!-- ADMIN + RECEPCION -->
     <a class="sb-link"
-       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+       sec:authorize="hasRole('ADMIN')"
        th:href="@{/}">
       <i class="fi fi-sr-apps"></i>
       Dashboard
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('RECEPCION')"
+       th:href="@{/recepcion}">
+      <i class="fi fi-sr-apps"></i>
+      Mi panel
     </a>
 
     <a class="sb-link"
@@ -57,7 +64,7 @@
     </a>
 
     <a class="sb-link"
-       sec:authorize="hasRole('ADMIN')"
+       sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
        th:href="@{/inventario}">
       <i class="fi fi-sr-box"></i>
       Inventario
@@ -89,6 +96,13 @@
     <!-- VETERINARIO -->
     <a class="sb-link"
        sec:authorize="hasRole('VETERINARIO')"
+       th:href="@{/veterinarios/panel}">
+      <i class="fi fi-sr-apps"></i>
+      Mi panel
+    </a>
+
+    <a class="sb-link"
+       sec:authorize="hasRole('VETERINARIO')"
        th:href="@{/veterinarios/agenda}">
       <i class="fi fi-sr-calendar-check"></i>
       Mi Agenda
@@ -103,7 +117,7 @@
 
     <a class="sb-link"
        sec:authorize="hasRole('VETERINARIO')"
-       th:href="@{/}">
+       th:href="@{/veterinarios/panel}">
       <i class="fi fi-sr-apps"></i>
       Inicio
     </a>
