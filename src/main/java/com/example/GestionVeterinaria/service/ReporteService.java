@@ -39,22 +39,27 @@ public class ReporteService {
 
     // ── KPIs ────────────────────────────────────────────────────────────────
 
+    // Cuenta el total de clientes registrados
     public long getTotalClientes() {
         return clienteRepository.count();
     }
 
+    // Cuenta el total de mascotas registradas
     public long getTotalMascotas() {
         return mascotaRepository.count();
     }
 
+    // Cuenta el total de veterinarios registrados
     public long getTotalVeterinarios() {
         return veterinarioRepository.count();
     }
 
+    // Cuenta las citas con estado "Programada"
     public long getCitasProgramadas() {
         return citaRepository.findByEstado("Programada").size();
     }
 
+    // Cuenta los comprobantes emitidos en el mes actual
     public long getComprobantesDelMes() {
         YearMonth mes = YearMonth.now();
         LocalDateTime ini = mes.atDay(1).atStartOfDay();
@@ -64,6 +69,7 @@ public class ReporteService {
                 .count();
     }
 
+    // Suma los ingresos por comprobantes emitidos en el mes actual
     public BigDecimal getIngresosDelMes() {
         YearMonth mes = YearMonth.now();
         LocalDateTime ini = mes.atDay(1).atStartOfDay();
@@ -75,10 +81,12 @@ public class ReporteService {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
+    // Cuenta los productos con stock bajo
     public long getProductosStockBajo() {
         return productoRepository.findStockBajo().size();
     }
 
+    // Lista los comprobantes emitidos dentro del rango de fechas indicado
     public List<Comprobante> getComprobantes(LocalDate desde, LocalDate hasta) {
         LocalDateTime inicio = desde.atStartOfDay();
         LocalDateTime fin = hasta.atTime(23, 59, 59);
@@ -88,6 +96,7 @@ public class ReporteService {
                 .toList();
     }
 
+    // Suma el total de una lista de comprobantes
     public BigDecimal getIngresos(List<Comprobante> comprobantes) {
         return comprobantes.stream().map(Comprobante::getTotal)
                 .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)
@@ -96,10 +105,12 @@ public class ReporteService {
 
     // ── Datos para gráficos ─────────────────────────────────────────────────
 
+    // Agrupa el conteo de citas por estado (sin filtro de fechas)
     public Map<String, Long> getCitasPorEstado() {
         return getCitasPorEstado(null, null);
     }
 
+    // Agrupa el conteo de citas por estado dentro de un rango de fechas
     public Map<String, Long> getCitasPorEstado(LocalDate desde, LocalDate hasta) {
         var citas = citaRepository.findAll().stream()
                 .filter(c -> desde == null || !c.getFechaCita().isBefore(desde))
@@ -112,6 +123,7 @@ public class ReporteService {
         return map;
     }
 
+    // Genera las etiquetas de los últimos 6 meses
     public List<String> getLabelsMeses() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM yyyy", Locale.of("es", "PE"));
         List<String> labels = new ArrayList<>();
@@ -121,6 +133,7 @@ public class ReporteService {
         return labels;
     }
 
+    // Calcula el total de ingresos por cada uno de los últimos 6 meses
     public List<Double> getIngresosPorMes() {
         List<Comprobante> todos = comprobanteRepository.findAll();
         List<Double> totales = new ArrayList<>();
@@ -138,6 +151,7 @@ public class ReporteService {
         return totales;
     }
 
+    // Agrupa los ingresos por día o por mes según la duración del rango indicado
     public Map<String, Double> getIngresosPorPeriodo(List<Comprobante> comprobantes, LocalDate desde, LocalDate hasta) {
         boolean diario = !desde.plusDays(45).isBefore(hasta);
         DateTimeFormatter formato = diario
@@ -156,6 +170,7 @@ public class ReporteService {
         return resultado;
     }
 
+    // Agrupa el conteo de mascotas por especie
     public Map<String, Long> getMascotasPorEspecie() {
         return mascotaRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
@@ -165,10 +180,12 @@ public class ReporteService {
                 ));
     }
 
+    // Agrupa el conteo de todos los comprobantes por tipo (boleta o factura)
     public Map<String, Long> getComprobantesPorTipo() {
         return getComprobantesPorTipo(comprobanteRepository.findAll());
     }
 
+    // Agrupa el conteo de una lista de comprobantes por tipo (boleta o factura)
     public Map<String, Long> getComprobantesPorTipo(List<Comprobante> comprobantes) {
         Map<String, Long> map = new LinkedHashMap<>();
         map.put("BOLETA", comprobantes.stream().filter(c -> "BOLETA".equalsIgnoreCase(c.getTipo())).count());

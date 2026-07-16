@@ -17,6 +17,7 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
+    // Lista todos los clientes registrados
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("clientes", clienteService.listarTodos());
@@ -24,6 +25,7 @@ public class ClienteController {
         return "layout/base";
     }
 
+    // Muestra el formulario para registrar un nuevo cliente
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("cliente", new Cliente());
@@ -31,6 +33,7 @@ public class ClienteController {
         return "layout/base";
     }
 
+    // Registra un nuevo cliente y valida DNI duplicado
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Cliente cliente, RedirectAttributes ra) {
         try {
@@ -43,6 +46,7 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
+    // Muestra el formulario de edición de un cliente existente
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("cliente", clienteService.devolverCliente_id(id));
@@ -50,6 +54,7 @@ public class ClienteController {
         return "layout/base";
     }
 
+    // Actualiza los datos de un cliente existente
     @PostMapping("/{id}/actualizar")
     public String actualizar(@PathVariable Long id,
                               @ModelAttribute Cliente cliente,
@@ -59,6 +64,7 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
+    // Elimina un cliente si no tiene mascotas asociadas
     @PostMapping("/{id}/eliminar")
     public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
         try {

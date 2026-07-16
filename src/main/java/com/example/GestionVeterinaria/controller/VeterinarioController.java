@@ -35,6 +35,7 @@ public class VeterinarioController
         this.usuarioRepository = usuarioRepository;
     }
 
+    // Lista todos los veterinarios registrados
     @GetMapping
     public String listarVeterinarios(Model model){
         model.addAttribute("veterinarios",veterinarioService.listarTodos());
@@ -42,6 +43,7 @@ public class VeterinarioController
         model.addAttribute("contenido","veterinarios/listar");
         return "layout/base";
     }
+    // Muestra el formulario para registrar un nuevo veterinario
     @GetMapping("/nuevo")
     public  String nuevoVeterinario(Model model){
         model.addAttribute("veterinario",new Veterinario());
@@ -49,11 +51,13 @@ public class VeterinarioController
         return "layout/base";
     }
 
+    // Registra un nuevo veterinario
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Veterinario veterinario){
         veterinarioService.registraVeterinario(veterinario);
         return "redirect:/veterinarios";
     }
+    // Muestra la agenda de citas programadas del veterinario autenticado
     @GetMapping("/agenda")
     public String verAgenda(Model model, Authentication authentication) {
 
@@ -75,6 +79,7 @@ public class VeterinarioController
         return "layout/base";
     }
 
+    // Muestra el panel del veterinario autenticado con citas de hoy y estadísticas
     @GetMapping("/panel")
     public String panelVeterinario(Model model, Authentication authentication) {
         Usuarios usuario = usuarioRepository.findByUsername(authentication.getName()).orElseThrow();
@@ -95,6 +100,7 @@ public class VeterinarioController
         return "layout/base";
     }
 
+    // Lista las citas ya completadas por el veterinario autenticado
     @GetMapping("/atendidas")
     public String verAtendidas(Model model, Authentication authentication) {
         String username = authentication.getName();

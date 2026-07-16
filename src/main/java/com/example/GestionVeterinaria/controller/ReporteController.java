@@ -29,6 +29,7 @@ public class ReporteController {
         this.reporteExportService = reporteExportService;
     }
 
+    // Muestra el dashboard de reportes con KPIs y gráficos del periodo indicado
     @GetMapping
     public String dashboard(@RequestParam(required = false) LocalDate desde,
                             @RequestParam(required = false) LocalDate hasta,
@@ -75,12 +76,14 @@ public class ReporteController {
         return "layout/base";
     }
 
+    // Genera y descarga el reporte de facturación en Excel
     @GetMapping("/excel")
     public ResponseEntity<byte[]> exportarExcel(@RequestParam LocalDate desde, @RequestParam LocalDate hasta) {
         byte[] archivo = reporteExportService.crearExcel(reporteService.getComprobantes(desde, hasta), desde, hasta);
         return archivo(archivo, "reporte-facturacion.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
+    // Genera y descarga el reporte de facturación en PDF
     @GetMapping("/pdf")
     public ResponseEntity<byte[]> exportarPdf(@RequestParam LocalDate desde, @RequestParam LocalDate hasta) {
         byte[] archivo = reporteExportService.crearPdf(reporteService.getComprobantes(desde, hasta), desde, hasta);

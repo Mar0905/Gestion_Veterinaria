@@ -33,15 +33,18 @@ public class ComprobanteService {
         this.productoRepository = productoRepository;
     }
 
+    // Lista todos los comprobantes emitidos
     public List<Comprobante> listarTodos() {
         return comprobanteRepository.findAll();
     }
 
+    // Busca un comprobante por id
     public Comprobante buscarPorId(Long id) {
         return comprobanteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comprobante no encontrado: " + id));
     }
 
+    // Crea un comprobante con sus detalles, calcula IGV/total y descuenta stock de productos
     @Transactional
     public Comprobante crear(Long clienteId, String tipo, String metodoPago,
                               String[] productoIds, String[] descripciones,
@@ -116,6 +119,7 @@ public class ComprobanteService {
         return comprobanteRepository.save(comp);
     }
 
+    // Elimina un comprobante y repone el stock de los productos de sus detalles
     @Transactional
     public void eliminar(Long id) {
         Comprobante comprobante = buscarPorId(id);
