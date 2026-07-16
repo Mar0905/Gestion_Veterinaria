@@ -23,13 +23,13 @@ public class HttpSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
 
                     // Recursos públicos
                     auth.requestMatchers("/login", "/error",
-                                    "/css/**", "/js/**", "/images/**")
+                                    "/css/**", "/js/**", "/images/**",
+                                    "/actuator/health")
                             .permitAll();
 
                     // ADMIN
