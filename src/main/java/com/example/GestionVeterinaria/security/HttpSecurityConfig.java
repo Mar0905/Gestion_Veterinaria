@@ -77,6 +77,19 @@ public class HttpSecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp.policyDirectives(
+                                "default-src 'self'; "
+                                        + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn-uicons.flaticon.com; "
+                                        + "font-src 'self' https://cdn-uicons.flaticon.com https://cdn.jsdelivr.net data:; "
+                                        + "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+                                        + "img-src 'self' data:; "
+                                        + "object-src 'none'; "
+                                        + "base-uri 'self'; "
+                                        + "form-action 'self'; "
+                                        + "frame-ancestors 'none'"
+                        ))
+                )
                 .build();
     }
 
