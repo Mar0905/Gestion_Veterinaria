@@ -142,10 +142,12 @@
       </div>
     </div>
 
-    <a th:href="@{/logout}" class="sb-logout">
-      <i class="fi fi-sr-sign-out-alt"></i>
-      Cerrar Sesión
-    </a>
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+      <button type="submit" class="sb-logout" style="cursor:pointer; font-family:inherit;">
+        <i class="fi fi-sr-sign-out-alt"></i>
+        Cerrar Sesión
+      </button>
+    </form>
 
   </div>
 
