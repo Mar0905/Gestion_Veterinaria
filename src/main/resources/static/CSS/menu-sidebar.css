@@ -159,8 +159,16 @@
   color: rgba(255,255,255,0.75) !important;
   font-size: 12px;
   font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
   text-decoration: none !important;
   transition: all 0.15s;
+}
+
+.sb-footer form {
+  width: 100%;
+  margin: 0;
 }
 
 .sb-logout:hover {
