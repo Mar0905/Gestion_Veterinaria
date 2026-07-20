@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+// Entidad que representa al dueño de una o más mascotas (solo registro de datos, no inicia sesión)
 @Entity
 @Table(name = "Clientes")
 public class Cliente {

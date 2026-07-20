@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+// Entidad que representa la atención clínica registrada para una cita de una mascota
 @Entity
 @Table(name = "Historial_Clinico")
 public class HistorialClinico {

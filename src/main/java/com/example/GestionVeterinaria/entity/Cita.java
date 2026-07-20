@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// Entidad que representa una cita agendada entre una mascota y un veterinario
 @Entity
 @Table(
         uniqueConstraints = @UniqueConstraint(

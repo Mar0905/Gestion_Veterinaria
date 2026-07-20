@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
+// Entidad de acceso al sistema: representa las credenciales y el rol de quien inicia sesión
 @Entity
 public class Usuarios implements UserDetails {
 

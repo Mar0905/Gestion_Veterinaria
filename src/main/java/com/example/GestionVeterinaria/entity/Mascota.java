@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+// Entidad que representa una mascota asociada a un cliente
 @Entity
 @Table(name = "Mascota")
 public class Mascota {

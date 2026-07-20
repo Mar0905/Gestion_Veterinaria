@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
+// Entidad que representa una línea (producto o servicio) dentro de un comprobante
 @Entity
 @Table(name = "DetalleComprobantes")
 public class DetalleComprobante {

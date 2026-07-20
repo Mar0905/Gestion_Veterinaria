@@ -207,6 +207,7 @@
 </div>
 
 <script>
+// Marca visualmente el método de pago elegido y lo guarda en el campo oculto
 function selectPago(btn, value) {
   document.querySelectorAll('.btn-pago').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
@@ -214,6 +215,7 @@ function selectPago(btn, value) {
   document.getElementById('pagoError').style.display = 'none';
 }
 
+// Impide enviar el formulario si no se seleccionó un método de pago
 function validarPago() {
   if (!document.getElementById('hiddenMetodoPago').value) {
     document.getElementById('pagoError').style.display = '';
@@ -222,6 +224,7 @@ function validarPago() {
   return true;
 }
 
+// Agrega una nueva línea de detalle clonando y limpiando la primera fila
 function addRow() {
   var tbody = document.getElementById('tbodyDetalles');
   var firstRow = tbody.querySelector('.detalle-row');
@@ -234,6 +237,7 @@ function addRow() {
   tbody.appendChild(clone);
 }
 
+// Elimina una línea de detalle (deja siempre al menos una fila)
 function removeRow(btn) {
   var tbody = document.getElementById('tbodyDetalles');
   if (tbody.querySelectorAll('.detalle-row').length <= 1) return;
@@ -241,6 +245,7 @@ function removeRow(btn) {
   calcularTotales();
 }
 
+// Autocompleta descripción, precio y límite de stock al elegir un producto del inventario
 function onProductoChange(select) {
   var row = select.closest('tr');
   var opt = select.options[select.selectedIndex];
@@ -260,6 +265,7 @@ function onProductoChange(select) {
   calcularTotales();
 }
 
+// Calcula el subtotal de una fila (cantidad × precio unitario)
 function calcularFila(row) {
   var cant   = parseFloat(row.querySelector('.cant-input').value) || 0;
   var precio = parseFloat(row.querySelector('.precio-input').value) || 0;
@@ -268,6 +274,7 @@ function calcularFila(row) {
   return sub;
 }
 
+// Recalcula subtotal, IGV (18%) y total sumando todas las filas de detalle
 function calcularTotales() {
   var subtotal = 0;
   document.querySelectorAll('.detalle-row').forEach(function(row) {

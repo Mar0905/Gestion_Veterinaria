@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Entidad que representa un comprobante de pago (boleta o factura) emitido a un cliente
 @Entity
 @Table(name = "Comprobantes")
 public class Comprobante {

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+// Entidad que representa un producto del inventario de la veterinaria
 @Entity
 @Table(name = "Productos")
 public class Producto {
@@ -65,15 +66,18 @@ public class Producto {
     public LocalDate getFechaVencimiento() { return fechaVencimiento; }
     public void setFechaVencimiento(LocalDate fechaVencimiento) { this.fechaVencimiento = fechaVencimiento; }
 
+    // Indica si el stock actual está en el mínimo o por debajo
     public boolean isStockBajo() {
         return stock != null && stockMinimo != null && stock <= stockMinimo;
     }
 
+    // Indica si el producto vence dentro de los próximos 30 días
     public boolean isProximoVencer() {
         if (fechaVencimiento == null) return false;
         return !fechaVencimiento.isAfter(LocalDate.now().plusDays(30));
     }
 
+    // Indica si el producto ya venció
     public boolean isVencido() {
         if (fechaVencimiento == null) return false;
         return fechaVencimiento.isBefore(LocalDate.now());

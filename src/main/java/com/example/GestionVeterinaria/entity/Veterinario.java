@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+// Entidad que representa a un veterinario registrado en el sistema
 @Entity
 @Table
 public class Veterinario {
