@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.List;
 import java.time.LocalDate;
 
+// Controlador del módulo de reportes: muestra el dashboard de KPIs/gráficos y exporta facturación a Excel/PDF
 @Controller
 @RequestMapping("/reportes")
 public class ReporteController {

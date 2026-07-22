@@ -13,6 +13,8 @@
     </div>
   </div>
 
+  <!-- Un solo formulario crea dos registros: el Veterinario y su Usuario de acceso con rol VETERINARIO
+       (ver AdminController.guardarVeterinario) -->
   <form th:action="@{/admin/veterinarios/guardar}" method="post"
         th:object="${veterinario}" style="max-width:560px">
 
@@ -38,6 +40,8 @@
       </div>
     </div>
 
+    <!-- Estos campos no pertenecen a la entidad Veterinario: se envían como parámetros aparte
+         y el controlador los usa para crear el Usuario (username/password cifrado) -->
     <div class="card mb-4">
       <div class="card-header">Credenciales de acceso</div>
       <div class="card-body">

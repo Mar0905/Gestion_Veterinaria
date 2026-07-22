@@ -26,9 +26,11 @@ public class Producto {
     @Column(nullable = false)
     private Integer stock = 0;
 
+    // Umbral bajo el cual se considera "stock bajo" y se muestra como alerta en el dashboard (isStockBajo)
     @Column(name = "stock_minimo", nullable = false)
     private Integer stockMinimo = 5;
 
+    // Opcional; usada para las alertas de productos próximos a vencer o vencidos en el dashboard
     @Column(name = "fecha_vencimiento")
     private LocalDate fechaVencimiento;
 

@@ -22,6 +22,7 @@ public class Veterinario {
     @Column(length = 50)
     private String telefono;
 
+    // Citas asignadas a este veterinario; sin cascade porque eliminar un veterinario no debe borrar sus citas
     @OneToMany(mappedBy = "veterinario")
     private List<Cita> citas;
 

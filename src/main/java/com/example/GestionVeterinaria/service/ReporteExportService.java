@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// Servicio que genera los archivos de exportación (Excel y PDF) del reporte de facturación
 @Service
 public class ReporteExportService {
 

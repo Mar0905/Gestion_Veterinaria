@@ -18,6 +18,7 @@
     <div class="card-header card-header-orange">Datos de la mascota</div>
     <div class="card-body">
 
+      <!-- El clienteId siempre viaja en la URL: la mascota queda asociada al cliente desde cuya ficha se abrió el formulario -->
       <form th:action="${mascota.id == null}
               ? @{/clientes/{cid}/mascotas/guardar(cid=${clienteId})}
               : @{/clientes/{cid}/mascotas/{mid}/actualizar(cid=${clienteId}, mid=${mascota.id})}"

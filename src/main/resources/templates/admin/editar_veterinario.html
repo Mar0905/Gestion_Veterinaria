@@ -17,6 +17,7 @@
     <div class="card-header">Datos del veterinario</div>
     <div class="card-body">
 
+      <!-- Solo actualiza los datos del veterinario; no permite cambiar aquí su usuario/contraseña de acceso -->
       <form th:action="@{/admin/veterinarios/{id}/actualizar(id=${veterinario.id})}"
             th:object="${veterinario}"
             method="post">

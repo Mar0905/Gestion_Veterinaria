@@ -103,6 +103,7 @@
     </div>
 
     <!-- ── Right: detail panel ──────────────────────────────── -->
+    <!-- Panel de detalle: no recarga la página, se llena en el cliente con los data-* de la fila seleccionada (ver script abajo) -->
     <div class="col-lg-4">
       <div class="card" id="clienteDetailCard">
         <div class="card-header card-header-blue">
@@ -172,7 +173,8 @@
 </div>
 
 <script>
-/* Click en fila → mostrar detalle */
+/* Click en fila → muestra el panel de detalle a la derecha con los datos guardados en los atributos data-* de la fila,
+   y arma los links de "Ver mascotas" / "Editar cliente" con el id del cliente seleccionado */
 document.querySelectorAll('.cliente-row').forEach(function(row) {
   row.addEventListener('click', function() {
     document.querySelectorAll('.cliente-row').forEach(function(r) {
@@ -202,7 +204,8 @@ document.querySelectorAll('.cliente-row').forEach(function(row) {
   });
 });
 
-/* Filtro de búsqueda */
+/* Filtro de búsqueda: oculta/muestra filas de la tabla comparando el texto ingresado contra todo el contenido
+   de cada fila (nombre, DNI, teléfono, etc). Es solo del lado del cliente, no consulta al servidor */
 function filterClientes(input) {
   var filter  = input.value.toLowerCase();
   var rows    = document.querySelectorAll('.cliente-row');

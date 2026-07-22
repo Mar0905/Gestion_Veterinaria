@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Controlador del dashboard principal (KPIs, próximas citas, alertas) y del panel de recepción
 @Controller
 public class HomeController {
 

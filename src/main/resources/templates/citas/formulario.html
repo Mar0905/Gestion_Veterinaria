@@ -20,6 +20,8 @@
     <div class="card-header card-header-blue">Datos de la cita</div>
     <div class="card-body">
 
+      <!-- mascotaId y veterinarioId se envían aparte del objeto cita; el servidor valida cruce de horario
+           y máximo de 3 citas diarias por veterinario antes de guardar (ver CitaService.registrarCita) -->
       <form th:action="@{/citas/guardar}" th:object="${cita}" method="post">
 
         <div class="mb-3">

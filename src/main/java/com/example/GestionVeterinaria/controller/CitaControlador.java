@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
+// Controlador CRUD para el registro, listado y eliminación de citas veterinarias
 @Controller
 @RequestMapping("/citas")
 public class CitaControlador {

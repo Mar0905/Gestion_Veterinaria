@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// Controlador CRUD para el registro, edición, listado y eliminación de mascotas de un cliente
 @Controller
 @RequestMapping("/clientes/{clienteId}/mascotas")
 public class MascotaController {

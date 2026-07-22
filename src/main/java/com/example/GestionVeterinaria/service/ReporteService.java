@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// Servicio que calcula los KPIs y los datos agregados usados en los gráficos del dashboard de reportes
 @Service
 public class ReporteService {
 

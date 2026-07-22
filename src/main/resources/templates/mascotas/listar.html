@@ -43,6 +43,7 @@
   </div>
 
   <!-- ── Table ────────────────────────────────────────────────── -->
+  <!-- Solo lista las mascotas del cliente indicado en la URL (/clientes/{clienteId}/mascotas) -->
   <div class="card">
     <div class="card-header card-header-orange d-flex justify-content-between align-items-center">
       <span th:text="'Mascotas (' + ${mascotas.size()} + ')'">Mascotas</span>
@@ -100,6 +101,7 @@
 </div>
 
 <script>
+/* Filtro de búsqueda genérico: oculta filas de la tabla cuyo texto no coincida con lo escrito */
 function filterTable(input, tableId) {
   var filter = input.value.toLowerCase();
   document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function(row) {

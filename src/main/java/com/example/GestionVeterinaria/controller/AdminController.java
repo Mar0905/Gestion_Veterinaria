@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+// Controlador del panel de administración: permite al ADMIN ver y gestionar clientes, veterinarios y citas
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")

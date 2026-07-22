@@ -22,6 +22,7 @@
     </div>
     <div class="card-body">
 
+      <!-- Un mismo formulario sirve para crear y editar: si cliente.id es null se envía a /guardar, si no a /actualizar -->
       <form th:action="${cliente.id == null} ? @{/clientes/guardar} : @{/clientes/{id}/actualizar(id=${cliente.id})}"
             th:object="${cliente}"
             method="post">
@@ -40,6 +41,7 @@
 
           <div class="col-md-4">
             <label class="form-label">DNI</label>
+            <!-- El DNI queda de solo lectura al editar porque es la clave única del cliente y no debe cambiarse -->
             <input type="text" class="form-control" th:field="*{dni}"
                    maxlength="8" pattern="\d{8}"
                    th:readonly="${cliente.id != null}"

@@ -13,6 +13,8 @@
     </div>
   </div>
 
+  <!-- Filtro de periodo: al enviarlo recarga la página con ?desde=&hasta=, recalculando KPIs y gráficos.
+       Los botones Excel/PDF reutilizan las mismas fechas para descargar el mismo reporte en ese formato -->
   <div class="card mb-4">
     <div class="card-body">
       <form method="get" th:action="@{/reportes}" class="row g-3 align-items-end">
@@ -140,6 +142,8 @@
 
 <script th:inline="javascript">
 /*<![CDATA[*/
+/* Los arreglos de abajo vienen ya calculados desde ReporteController/ReporteService (uno por gráfico);
+   aquí solo se usan para dibujar los 4 gráficos con Chart.js */
 var citasLabels    = /*[[${citasLabels}]]*/ [];
 var citasCounts    = /*[[${citasCounts}]]*/ [];
 var ingresosLabels = /*[[${ingresosLabels}]]*/ [];
@@ -152,6 +156,7 @@ var tiposData      = /*[[${tiposData}]]*/ [];
 Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
 Chart.defaults.font.size   = 12;
 
+// Gráfico de dona: cantidad de citas por estado (Programada / Atendidas / Cancelada)
 new Chart(document.getElementById('chartCitas'), {
     type: 'doughnut',
     data: {
@@ -169,6 +174,7 @@ new Chart(document.getElementById('chartCitas'), {
     }
 });
 
+// Gráfico de dona: cantidad de comprobantes emitidos por tipo (boleta o factura)
 new Chart(document.getElementById('chartTipos'), {
     type: 'doughnut',
     data: {
@@ -186,6 +192,7 @@ new Chart(document.getElementById('chartTipos'), {
     }
 });
 
+// Gráfico de barras horizontales: cantidad de mascotas registradas agrupadas por especie
 new Chart(document.getElementById('chartEspecies'), {
     type: 'bar',
     data: {
@@ -204,6 +211,7 @@ new Chart(document.getElementById('chartEspecies'), {
     }
 });
 
+// Gráfico de línea: evolución de ingresos dentro del periodo filtrado (agrupado por día o por mes según el rango)
 new Chart(document.getElementById('chartIngresos'), {
     type: 'line',
     data: {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Servicio con la lógica de negocio para el registro, edición y eliminación de mascotas
 @Service
 public class MascotaService {
 

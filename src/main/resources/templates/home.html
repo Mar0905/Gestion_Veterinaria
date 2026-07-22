@@ -45,6 +45,7 @@
   </div>
 
   <!-- ── Próximas citas + Alertas ─────────────────────────────── -->
+  <!-- proximasCitas: hasta 6 citas "Programada" con fecha desde hoy en adelante (ver HomeController.home) -->
   <div class="row g-3 mb-3">
 
     <!-- Próximas citas -->
@@ -104,6 +105,7 @@
     </div>
 
     <!-- Alertas del sistema -->
+    <!-- hayAlertas es true si hay al menos un producto con stock bajo o próximo a vencer (ver HomeController.home) -->
     <div class="col-lg-5">
       <div class="card h-100">
         <div class="card-header card-header-orange">Alertas del sistema</div>
@@ -116,7 +118,7 @@
             <span class="small">Todo está en orden. Sin alertas.</span>
           </div>
 
-          <!-- Stock bajo -->
+          <!-- Stock bajo: máximo 3 productos con stock <= stockMinimo -->
           <div th:each="p : ${alertasStock}"
                class="d-flex align-items-start gap-2 p-3 rounded"
                style="background:#fff7ed;border:1px solid #fed7aa">
@@ -128,7 +130,7 @@
             </p>
           </div>
 
-          <!-- Próximos a vencer -->
+          <!-- Próximos a vencer: máximo 3 productos que vencen dentro de los próximos 30 días -->
           <div th:each="p : ${alertasVencimiento}"
                class="d-flex align-items-start gap-2 p-3 rounded"
                style="background:#ecfdf5;border:1px solid #a7f3d0">

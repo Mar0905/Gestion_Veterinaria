@@ -28,6 +28,7 @@
   </div>
 
   <!-- ── Calendario semanal ────────────────────────────────────── -->
+  <!-- Se construye por completo en JavaScript (no en el servidor); marca con un punto los días que tienen citas -->
   <div class="card mb-3">
     <div class="card-header card-header-blue d-flex align-items-center justify-content-between">
       <span id="semanaLabel">Semana actual</span>
@@ -117,7 +118,9 @@ var citasFechas = [];
 citasFechas.push(/*[[${#strings.toString(c.fechaCita)}]]*/ null);
 /*[/]*/
 
-/* ── Construir calendario semanal ── */
+/* ── Construir calendario semanal ──
+   Genera las 7 tarjetas (lunes a domingo) de la semana actual, resalta el día de hoy,
+   marca con un punto los días que tienen al menos una cita y deja la tabla filtrada por el día de hoy */
 (function() {
   var today = new Date();
   today.setHours(0,0,0,0);
@@ -182,6 +185,7 @@ citasFechas.push(/*[[${#strings.toString(c.fechaCita)}]]*/ null);
     'Citas del ' + yy + '-' + mo + '-' + dy;
 })();
 
+/* Muestra en la tabla solo las citas cuya fecha coincide con la del día seleccionado en el calendario */
 function filterByDate(dateStr) {
   document.querySelectorAll('.cita-row').forEach(function(row) {
     var fecha = row.dataset.fecha || row.cells[0].textContent.trim();
@@ -189,12 +193,14 @@ function filterByDate(dateStr) {
   });
 }
 
+/* Quita el filtro de fecha y vuelve a mostrar todas las citas en la tabla */
 function mostrarTodas() {
   document.querySelectorAll('.week-day-card').forEach(function(c) { c.classList.remove('active'); });
   document.querySelectorAll('.cita-row').forEach(function(row) { row.style.display = ''; });
   document.getElementById('tableLabel').textContent = 'Citas del sistema';
 }
 
+/* Búsqueda libre por mascota, veterinario o motivo; anula el filtro por día del calendario */
 function searchCitas(input) {
   var filter = input.value.toLowerCase();
   document.querySelectorAll('.week-day-card').forEach(function(c) { c.classList.remove('active'); });

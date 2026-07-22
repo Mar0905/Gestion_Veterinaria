@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Repositorio JPA para el acceso a datos de mascotas
 @Repository
 public interface MascotaRepository extends JpaRepository<Mascota,Long> {
     // Busca mascotas por cliente

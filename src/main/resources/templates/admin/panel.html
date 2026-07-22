@@ -14,6 +14,7 @@
   </div>
 
   <!-- ── Clientes ─────────────────────────────────────────────── -->
+  <!-- Eliminar aquí borra el cliente directamente vía AdminController.eliminarCliente (sin confirmación de mascotas asociadas) -->
   <div class="card mb-4">
     <div class="card-header card-header-blue d-flex justify-content-between align-items-center">
       <span>Clientes</span>
@@ -55,6 +56,7 @@
   </div>
 
   <!-- ── Veterinarios ──────────────────────────────────────────── -->
+  <!-- "Nuevo" lleva al formulario que crea, a la vez, el registro del veterinario y su usuario de acceso -->
   <div class="card mb-4">
     <div class="card-header card-header-green d-flex justify-content-between align-items-center">
       <span>Veterinarios</span>
@@ -93,6 +95,7 @@
   </div>
 
   <!-- ── Citas ─────────────────────────────────────────────────── -->
+  <!-- Vista global de todas las citas del sistema (no solo las del admin); el ícono de ojo abre el modal de detalle -->
   <div class="card">
     <div class="card-header card-header-orange">Citas del sistema</div>
     <div class="card-body p-0">
@@ -140,7 +143,7 @@
 
 </div>
 
-<!-- Modales de detalle -->
+<!-- Modales de detalle: se genera un modal Bootstrap por cada cita, identificado por su id -->
 <div th:each="c : ${citas}">
   <div class="modal fade" th:id="'modal' + ${c.id}" tabindex="-1">
     <div class="modal-dialog">

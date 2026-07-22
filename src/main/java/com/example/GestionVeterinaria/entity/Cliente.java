@@ -14,6 +14,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // DNI único: se usa para evitar registrar el mismo cliente dos veces (ver ClienteService.registrar)
     @Column(length = 8, nullable = false, unique = true)
     private String dni;
 
@@ -32,9 +33,11 @@ public class Cliente {
     @Column(length = 200)
     private String direccion;
 
+    // Se asigna automáticamente con la fecha actual al registrar el cliente, no la ingresa el usuario
     @Column(name = "fecha_Registro")
     private LocalDate fechRegistro;
 
+    // Mascotas del cliente: cascade ALL hace que al eliminar el cliente se eliminen también sus mascotas
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Mascota> mascotas;
 

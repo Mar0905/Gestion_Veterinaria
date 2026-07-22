@@ -7,6 +7,7 @@ import java.time.LocalTime;
 
 // Entidad que representa una cita agendada entre una mascota y un veterinario
 @Entity
+// Restricción a nivel de base de datos: un veterinario no puede tener dos citas en la misma fecha y hora
 @Table(
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {"veterinario_id", "fechaCita", "horaCita"}
@@ -31,6 +32,7 @@ public class Cita {
     @JoinColumn(name = "mascota_id", nullable = false)
     private Mascota mascota;
 
+    // Valores usados en el sistema: "Programada", "COMPLETADA", "Cancelada" (ver CitaService y los reportes)
     @Column(length = 100)
     private String estado;
 
@@ -38,6 +40,7 @@ public class Cita {
     @JoinColumn(name = "veterinario_id", nullable = false)
     private Veterinario veterinario;
 
+    // Historial clínico generado al atender la cita; orphanRemoval borra el historial si se desvincula de la cita
     @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
     private HistorialClinico historialClinico;
 

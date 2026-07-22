@@ -22,21 +22,26 @@ public class Comprobante {
     @Column(length = 10, nullable = false)
     private String tipo; // BOLETA, FACTURA
 
+    // Monto antes de impuestos
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
+    // Impuesto General a las Ventas calculado sobre el subtotal
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal igv;
 
+    // Monto final a pagar (subtotal + igv); es el valor usado para sumar ingresos en los reportes
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal total;
 
     @Column(name = "metodo_pago", length = 20, nullable = false)
     private String metodoPago; // efectivo, tarjeta, yape, plin
 
+    // Fecha y hora de emisión; se usa para filtrar por periodo en el dashboard y en los reportes
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    // Ítems facturados en este comprobante; se eliminan en cascada si se elimina el comprobante
     @OneToMany(mappedBy = "comprobante", cascade = CascadeType.ALL)
     private List<DetalleComprobante> detalles;
 

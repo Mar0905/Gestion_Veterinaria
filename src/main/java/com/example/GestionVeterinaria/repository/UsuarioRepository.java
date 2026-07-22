@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
+// Repositorio JPA para el acceso a datos de usuarios del sistema (credenciales y rol usados en el login)
 public interface UsuarioRepository extends JpaRepository<Usuarios, Long> {
     // Busca un usuario por username
     Optional<Usuarios> findByUsername(String username);

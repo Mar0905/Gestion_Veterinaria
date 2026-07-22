@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+// Repositorio JPA para el acceso a datos de citas
 @Repository
 public interface CitaRepository extends JpaRepository<Cita,Long> {
 

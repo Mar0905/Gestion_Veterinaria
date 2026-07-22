@@ -31,13 +31,16 @@ public class Mascota {
     @Column(nullable = false)
     private double peso;
 
+    // Cliente dueño de la mascota; obligatorio, toda mascota debe pertenecer a un cliente registrado
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    // Historial clínico de la mascota; se elimina en cascada si se elimina la mascota
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL)
     private List<HistorialClinico> historiales;
 
+    // Citas asociadas a la mascota; se eliminan en cascada si se elimina la mascota
     @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL)
     private List<Cita> citas;
 
